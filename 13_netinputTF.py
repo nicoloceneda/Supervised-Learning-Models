@@ -18,9 +18,9 @@ import tensorflow as tf
 g = tf.Graph()
 
 with g.as_default():
-    x = tf.placeholder(dtype=tf.float32, shape=(None), name="x")
+    x = tf.placeholder(dtype=tf.float32, shape=None, name="input_x")
     w = tf.Variable(2.0, name="weight")
-    b = tf.Variable(0.7, name="basis")
+    b = tf.Variable(0.7, name="bias")
     init = tf.global_variables_initializer()
 
     z = w*x + b
@@ -33,6 +33,6 @@ with tf.Session(graph=g) as sess:
     # Initialize the variables w and b
     sess.run(init)
 
-    # Evaluate z
-    for t in [1.0, 0.6, -1.8]:
-        print("X = {:>5,.2f} --> z = {:>5,.2f}".format(t, sess.run(z, feed_dict={x: t})))
+    # Evaluate z at each x
+    for i in [1.0, 0.6, -1.8]:
+        print("X = {:>5,.2f} --> z = {:>5,.2f}".format(i, sess.run(z, feed_dict={x: i})))
