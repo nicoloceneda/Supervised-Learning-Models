@@ -8,30 +8,40 @@
 
 # IMPORT LIBRARIES AND/OR MODULES
 
+
 import tensorflow as tf
 import numpy as np
 
 
-# GRAPH AND SESSION
+# BUILDING THE COMPUTATIONAL GRAPH
 
-# Building a computational graph
 
 g = tf.Graph()
 
 with g.as_default():
-    x = tf.placeholder(dtype=tf.float32, shape=(None, 2, 3), name="X")
 
-    x_res = tf.reshape(x, shape=(-1, 6), name="reshaped")
-    x_sum = tf.reduce_sum(x_res, axis=0, name="col_sum")
-    x_mean = tf.reduce_mean(x_res, axis=0, name="col_mean")
+    # Import the input array
+    X = tf.placeholder(dtype=tf.float32, shape=(None, 2, 3), name="X")
+
+    # Reshape the array
+    X_res = tf.reshape(X, shape=(-1, 6), name="reshaped_X")
+
+    # Calculate the sum and the mean of the reshaped array
+    X_sum = tf.reduce_sum(X_res, axis=0, name="col_sum")
+    X_mean = tf.reduce_mean(X_res, axis=0, name="col_mean")
 
 
-# Running the computational graph
+# RUNNING THE COMPUTATIONAL GRAPH
+
 
 with tf.Session(graph=g) as sess:
-    x_array = np.arange(18).reshape(3, 2, 3)
-    print("Input shape: ", x_array.shape)
-    print("Reshaped:\n", sess.run(x_res, feed_dict={x: x_array}))
-    print("Columns sums:\n", sess.run(x_sum, feed_dict={x: x_array}))
-    print("Columns means:\n", sess.run(x_mean, feed_dict={x: x_array}))
+
+    # Generate a random array
+    X_array = np.arange(18).reshape(3, 2, 3)
+
+    # Evaluating the initial shape, the reshaped array and the mean and sum of its columns
+    print("Shape input array: ", X_array.shape)
+    print("Reshaped array:\n", sess.run(X_res, feed_dict={X: X_array}))
+    print("Columns sums:\n", sess.run(X_sum, feed_dict={X: X_array}))
+    print("Columns means:\n", sess.run(X_mean, feed_dict={X: X_array}))
 
