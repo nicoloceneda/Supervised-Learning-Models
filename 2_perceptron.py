@@ -184,7 +184,8 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
     plt.legend(loc="upper left")
 
 
-# Apply the perceptron
+# APPLY THE PERCEPTRON
+
 
 plot_decision_regions(X, y, classifier=ppn)
 
