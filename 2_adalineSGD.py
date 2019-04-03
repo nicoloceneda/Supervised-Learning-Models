@@ -241,7 +241,8 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
     plt.legend(loc="upper left")
 
 
-# Apply the ADALINE
+# APPLY THE ADALINE
+
 
 plot_decision_regions(X_std, y, classifier=ada)
 
