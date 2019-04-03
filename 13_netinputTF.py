@@ -8,25 +8,31 @@
 
 # IMPORT LIBRARIES AND/OR MODULES
 
+
 import tensorflow as tf
 
 
-# GRAPH AND SESSION
+# BUILDING THE COMPUTATIONAL GRAPH
 
-# Building a computational graph
 
 g = tf.Graph()
 
 with g.as_default():
-    x = tf.placeholder(dtype=tf.float32, shape=None, name="input_x")
+
+    # Import the input x
+    x = tf.placeholder(dtype=tf.float32, shape=None, name="x")
+
+    # Initialize the global variables w and b
     w = tf.Variable(2.0, name="weight")
     b = tf.Variable(0.7, name="bias")
     init = tf.global_variables_initializer()
 
+    # Calculate the net input
     z = w*x + b
 
 
-# Running the computational graph
+# RUNNING THE COMPUTATIONAL GRAPH
+
 
 with tf.Session(graph=g) as sess:
 
