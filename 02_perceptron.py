@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as clr
 
 
-# DESIGN THE PERCEPTRON
+# 1. DESIGN THE PERCEPTRON
 
 
 class Perceptron(object):
@@ -87,7 +87,7 @@ class Perceptron(object):
         return prediction
 
 
-# PREPARE THE DATA
+# 2. PREPARE THE DATA
 
 
 # Import the dataset
@@ -117,7 +117,7 @@ plt.ylabel("Petal length [cm]")
 plt.legend(loc="upper left")
 
 
-# TRAIN THE PERCEPTRON
+# 3. TRAIN THE PERCEPTRON
 
 
 # Initialize a perceptron object
@@ -138,7 +138,7 @@ plt.xlabel("Epochs")
 plt.ylabel("Number of n_misclassifications")
 
 
-# VISUALIZE THE DECISION BOUNDARIES TO VERIFY THAT THE TRAINING SAMPLE IS CLASSIFIED CORRECTLY
+# 4. VISUALIZE THE DECISION BOUNDARIES AND VERIFY THAT THE TRAINING SAMPLE IS CLASSIFIED CORRECTLY
 
 
 # Function to visualize the decision boundaries
