@@ -1,8 +1,12 @@
 # Content of the programs:
 
-## 2_perceptron
+## 02_perceptron
 
-Implementation of a single layer perceptron.
+Implementation of a single layer perceptron:
+1. Design the perceptron
+2. Prepare the data
+3. Train the perceptron
+4. Visualize the decision boundaries and verify that the training sample is classified correctly. 
 
 ## 2_adalineGD
 
