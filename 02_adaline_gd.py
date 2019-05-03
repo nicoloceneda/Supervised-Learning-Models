@@ -1,6 +1,6 @@
 """ adaline_gd
     ----------
-    Implementation of a single layer adaptive linear neuron via gradient descent algorithm.
+    Implementation of a single layer adaptive linear neuron (with standardization) via gradient descent algorithm.
 """
 
 # IMPORT LIBRARIES AND/OR MODULES
