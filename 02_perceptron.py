@@ -38,6 +38,7 @@ class Perceptron(object):
     """
 
     def __init__(self, eta=0.01, n_epoch=50, seed=1):
+
         self.eta = eta
         self.n_epoch = n_epoch
         self.seed = seed
@@ -77,12 +78,19 @@ class Perceptron(object):
 
         return self
 
+    def net_input(self, Xi):
+
+        """ Return the net input """
+
+        net_input = np.dot(Xi, self.w[1:].T) + self.w[0]
+
+        return net_input
+
     def predict(self, Xi):
 
         """ Return class label after unit step """
 
-        net_input = np.dot(Xi, self.w[1:]) + self.w[0]
-        prediction = np.where(net_input >= 0.0, 1, -1)
+        prediction = np.where(self.net_input(Xi) >= 0.0, 1, -1)
 
         return prediction
 
@@ -98,7 +106,7 @@ print(data.head())
 
 # Extract the class labels
 
-y = data.iloc[0:100, 4].to_numpy()
+y = data.iloc[0:100, [4]].to_numpy()
 y = np.where(y == "Iris-setosa", -1, 1)
 
 
@@ -125,7 +133,7 @@ plt.legend(loc="upper left")
 ppn = Perceptron(eta=0.1, n_epoch=10)
 
 
-# Learn from data via the fit method (predict method is called in fit method for weight update)
+# Learn from data via the fit method (the predict method is called in fit method to learn the weights)
 
 ppn.fit(X, y)
 
@@ -133,7 +141,7 @@ ppn.fit(X, y)
 # Plot the number of n_misclassifications per epoch
 
 plt.figure()
-plt.plot(range(1, len(ppn.n_miscl)+1), ppn.n_miscl, marker="o")
+plt.plot(range(1, len(ppn.n_miscl) + 1), ppn.n_miscl, marker="o")
 plt.xlabel("Epochs")
 plt.ylabel("Number of n_misclassifications")
 
@@ -179,17 +187,19 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
     plt.xlim(x0_min, x0_max)
     plt.ylim(x1_min, x1_max)
 
-    plt.scatter(X[:50, 0], X[:50, 1], alpha =0.8, color="red", marker="o", label='+1',edgecolor='black')
-    plt.scatter(X[50:100, 0], X[50:100, 1], alpha = 0.8, color = "blue", marker = "x", label = '-1', edgecolor='black')
-    plt.xlabel("Sepal length [cm]")
-    plt.ylabel("Petal length [cm]")
-    plt.legend(loc="upper left")
+    plt.scatter(X[:50, 0], X[:50, 1], alpha=0.8, color='red', marker='o', label='+1', edgecolor='black')
+    plt.scatter(X[50:100, 0], X[50:100, 1], alpha=0.8, color='blue', marker='x', label='-1', edgecolor='black')
+    plt.xlabel('Sepal length [cm]')
+    plt.ylabel('Petal length [cm]')
+    plt.legend(loc='upper left')
 
 
 # Plot the decision region and the data
 
-
 plot_decision_regions(X, y, classifier=ppn)
+
+
+# 5. GENERAL
 
 
 # Show plots
