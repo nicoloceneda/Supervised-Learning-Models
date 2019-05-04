@@ -3,7 +3,8 @@
     Implementation of a single layer adaptive linear neuron (with standardization) via gradient descent algorithm.
 """
 
-# IMPORT LIBRARIES AND/OR MODULES
+
+# 0. IMPORT LIBRARIES AND/OR MODULES
 
 
 import numpy as np
@@ -58,14 +59,13 @@ class AdalineGD(object):
         """
 
         rgen = np.random.RandomState(self.seed)
-        self.w = rgen.normal(loc=0.0, scale=0.01, size=[1 + X.shape[1], 1])
+        self.w = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1]) # TODO: (3,)
         self.cost_fun = []
 
         for epoch in range(self.n_epoch):
-
-            update = y - self.activation(self.net_input(X))
+            update = y - (self.activation(self.net_input(X)))  # TODO:  (100,)  <--- y: (100,) - (100,)  //
             self.w[0] += self.eta * np.sum(update)
-            self.w[1:] += self.eta * np.dot(X.T, update)
+            self.w[1:] += self.eta * np.dot(X.T, update) # TODO: X.T : (2,100) (100,) //  (2,100)  (1,100)
             cost = 0.5 * np.sum(update**2)
             self.cost_fun.append(cost)
 
@@ -75,7 +75,7 @@ class AdalineGD(object):
 
         """ Return the net input """
 
-        net_input = (np.dot(X, self.w[1:]) + self.w[0])
+        net_input = np.dot(X, self.w[1:]) + self.w[0] # TODO: (100,2) * (2,) ---> (100,) ---> (100,) + (1,)  --> (100,)
 
         return net_input
 
@@ -103,7 +103,7 @@ print(data.head())
 
 # Extract the class labels
 
-y = data.iloc[0:100, [4]].to_numpy()
+y = data.iloc[0:100, 4].to_numpy()
 y = np.where(y == "Iris-setosa", -1, 1)
 
 
@@ -137,7 +137,7 @@ ada = AdalineGD(eta=0.01, n_epoch=15)
 
 # Learn from the data via the fit method (the activation method, rather than predict method, is called in the fit method to learn the weights)
 
-ada.fit(X_std, y)
+ada.fit(X_std, y) # TODO: X_std : (100,2) // (100,1)
 
 
 # Plot the cost function per epoch
@@ -145,7 +145,7 @@ ada.fit(X_std, y)
 plt.figure()
 plt.plot(range(1, len(ada.cost_fun) + 1), (ada.cost_fun), marker="o")
 plt.xlabel("Epochs")
-plt.ylabel("log(Sum of squared errors)")
+plt.ylabel("Sum of squared errors")
 plt.title("AdalineGD with standard. - eta = 0.01")
 
 
