@@ -4,7 +4,7 @@
 """
 
 
-# IMPORT LIBRARIES AND/OR MODULES
+# 0. IMPORT LIBRARIES AND/OR MODULES
 
 
 import numpy as np
@@ -60,7 +60,7 @@ class Perceptron(object):
         """
 
         rgen = np.random.RandomState(self.seed)
-        self.w = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1])
+        self.w = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1]) 
         self.n_miscl = []
 
         for epoch in range(self.n_epoch):
@@ -78,19 +78,19 @@ class Perceptron(object):
 
         return self
 
-    def net_input(self, Xi):
+    def net_input(self, X):
 
         """ Return the net input """
 
-        net_input = np.dot(Xi, self.w[1:].T) + self.w[0]
+        net_input = np.dot(X, self.w[1:]) + self.w[0]
 
         return net_input
 
-    def predict(self, Xi):
+    def predict(self, X):
 
         """ Return class label after unit step """
 
-        prediction = np.where(self.net_input(Xi) >= 0.0, 1, -1)
+        prediction = np.where(self.net_input(X) >= 0.0, 1, -1)
 
         return prediction
 
