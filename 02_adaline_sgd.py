@@ -44,8 +44,6 @@ class AdalineSGD(object):
         self.seed = seed
         self.shuffle = shuffle
 
-        self.w_initialized = False
-
     def fit(self, X, y):
 
         """ Fit training data
@@ -64,7 +62,6 @@ class AdalineSGD(object):
 
         rgen = np.random.RandomState(self.seed)
         self.w = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1])
-        self.w_initialized = True
         self.avg_cost_fun = []
 
         for epoch in range(self.n_epoch):
@@ -79,25 +76,6 @@ class AdalineSGD(object):
                 cost.append(self.update_weights(Xi, yi))
 
             self.avg_cost_fun.append(sum(cost) / len(cost))
-
-        return self
-
-    def partial_fit(self, X, y):
-
-        """ Fit training data without reinitializing the weights. """
-
-        if not self.w_initialized:
-            rgen = np.random.RandomState(self.seed)
-            self.w = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1])
-            self.w_initialized = True
-
-        if y.shape[0] > 1:
-
-            for Xi, yi in zip(X,y):
-                self.update_weights(Xi, yi)
-
-        else:
-            self.update_weights(X,y)
 
         return self
 
@@ -129,7 +107,7 @@ class AdalineSGD(object):
 
     def activation(self, z):
 
-        """ Return the linear activatio.n """
+        """ Return the linear activation """
 
         return z
 
