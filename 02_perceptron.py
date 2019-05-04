@@ -60,7 +60,7 @@ class Perceptron(object):
         """
 
         rgen = np.random.RandomState(self.seed)
-        self.w = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1]) 
+        self.w = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1])
         self.n_miscl = []
 
         for epoch in range(self.n_epoch):
@@ -106,7 +106,7 @@ print(data.head())
 
 # Extract the class labels
 
-y = data.iloc[0:100, [4]].to_numpy()
+y = data.iloc[0:100, 4].to_numpy()
 y = np.where(y == "Iris-setosa", -1, 1)
 
 
