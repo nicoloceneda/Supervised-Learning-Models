@@ -22,26 +22,26 @@ class AdalineSGD(object):
     -----------
     eta : float
         Learning rate (between 0.0 and 1.0).
-    n_epoch : int
+    n_iter : int
         Passes over the training dataset.
-    seed : int
-        Random number generator seed for random weight initialization.
+    random_state : int
+        Random number generator random_state for random weight initialization.
     shuffle : bool (default: True)
-        If set to True, it shuffles the training dataset every epoch to prevent cycles.
+        If set to True, it shuffles the training dataset every iter to prevent cycles.
 
     Attributes:
     -----------
     w : 1d-array
         Weights after fitting.
     cost_fun : list
-        Sum of squares cost function value averaged over all training samples in each epoch.
+        Sum of squares cost function value averaged over all training samples in each iter.
     """
 
-    def __init__(self, eta=0.01, n_epoch=10, seed=1, shuffle=True):
+    def __init__(self, eta=0.01, n_iter=10, random_state=1, shuffle=True):
 
         self.eta = eta
-        self.n_epoch = n_epoch
-        self.seed = seed
+        self.n_iter = n_iter
+        self.random_state = random_state
         self.shuffle = shuffle
 
     def fit(self, X, y):
@@ -60,11 +60,11 @@ class AdalineSGD(object):
         self : object
         """
 
-        rgen = np.random.RandomState(self.seed)
+        rgen = np.random.RandomState(self.random_state)
         self.w = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1])
         self.avg_cost_fun = []
 
-        for epoch in range(self.n_epoch):
+        for iter in range(self.n_iter):
 
             if self.shuffle:
                 X, y = self.shuffler(X, y)
@@ -94,7 +94,7 @@ class AdalineSGD(object):
 
         """ Shuffle training data. """
 
-        rgen = np.random.RandomState(self.seed)
+        rgen = np.random.RandomState(self.random_state)
         pos = rgen.permutation(len(y))
 
         return X[pos], y[pos]
@@ -160,7 +160,7 @@ plt.legend(loc="upper left")
 
 # Initialize the adaline object
 
-ada = AdalineSGD(eta=0.01, n_epoch=15)
+ada = AdalineSGD(eta=0.01, n_iter=15)
 
 
 # Learn from the data via the fit method (the activation method, rather than predict method, is called in the fit method to learn the weights)
@@ -168,11 +168,11 @@ ada = AdalineSGD(eta=0.01, n_epoch=15)
 ada.fit(X_std, y)
 
 
-# Plot the cost function per epoch
+# Plot the cost function per iter
 
 plt.figure()
 plt.plot(range(1, len(ada.avg_cost_fun) + 1), ada.avg_cost_fun, marker="o")
-plt.xlabel("Epochs")
+plt.xlabel("iters")
 plt.ylabel("Average Sum of squared errors")
 plt.title("AdalineSGD with standard. - eta = 0.01")
 

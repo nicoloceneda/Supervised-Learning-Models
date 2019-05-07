@@ -15,6 +15,7 @@ import matplotlib.colors as clr
 
 # 1. DESIGN THE ADALINE
 
+
 class AdalineGD(object):
 
     """ ADAptive LInear NEuron classifier
@@ -23,24 +24,24 @@ class AdalineGD(object):
     -----------
     eta : float
         Learning rate (between 0.0 and 1.0).
-    n_epoch : int
+    n_iter : int
         Passes over the training dataset.
-    seed : int
-        Random number generator seed for random weight initialization.
+    random_state : int
+        Random number generator random_state for random weight initialization.
 
     Attributes:
     -----------
     w : 1d-array
         Weights after fitting.
     cost_fun : list
-        Sum of squares cost function value in each epoch.
+        Sum of squares cost function value in each iter.
     """
 
-    def __init__(self, eta=0.01, n_epoch=50, seed=1):
+    def __init__(self, eta=0.01, n_iter=50, random_state=1):
 
         self.eta = eta
-        self.n_epoch = n_epoch
-        self.seed = seed
+        self.n_iter = n_iter
+        self.random_state = random_state
 
     def fit(self, X, y):
 
@@ -58,11 +59,11 @@ class AdalineGD(object):
         self : object
         """
 
-        rgen = np.random.RandomState(self.seed)
+        rgen = np.random.RandomState(self.random_state)
         self.w = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1])
         self.cost_fun = []
 
-        for epoch in range(self.n_epoch):
+        for iter in range(self.n_iter):
             update = y - (self.activation(self.net_input(X)))
             self.w[0] += self.eta * np.sum(update)
             self.w[1:] += self.eta * np.dot(X.T, update)
@@ -132,7 +133,7 @@ plt.legend(loc="upper left")
 
 # Initialize the adaline object
 
-ada = AdalineGD(eta=0.01, n_epoch=15)
+ada = AdalineGD(eta=0.01, n_iter=15)
 
 
 # Learn from the data via the fit method (the activation method, rather than predict method, is called in the fit method to learn the weights)
@@ -140,11 +141,11 @@ ada = AdalineGD(eta=0.01, n_epoch=15)
 ada.fit(X_std, y)
 
 
-# Plot the cost function per epoch
+# Plot the cost function per iter
 
 plt.figure()
 plt.plot(range(1, len(ada.cost_fun) + 1), ada.cost_fun, marker="o")
-plt.xlabel("Epochs")
+plt.xlabel("iters")
 plt.ylabel("Sum of squared errors")
 plt.title("AdalineGD with standard. - eta = 0.01")
 

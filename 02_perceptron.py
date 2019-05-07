@@ -24,24 +24,24 @@ class Perceptron(object):
     -----------
     eta : float
         Learning rate (between 0.0 and 1.0).
-    n_epoch : int
+    n_iter : int
         Passes over the training dataset.
-    seed : int
-        Random number generator seed for random weight initialization.
+    random_state : int
+        Random number generator random_state for random weight initialization.
 
     Attributes:
     -----------
     w : 1d-array
         Weights after fitting.
     n_miscl : list
-        Number of n_misclassifications (updates) in each epoch.
+        Number of n_misclassifications (updates) in each iter.
     """
 
-    def __init__(self, eta=0.01, n_epoch=50, seed=1):
+    def __init__(self, eta=0.01, n_iter=50, random_state=1):
 
         self.eta = eta
-        self.n_epoch = n_epoch
-        self.seed = seed
+        self.n_iter = n_iter
+        self.random_state = random_state
 
     def fit(self, X, y):
 
@@ -59,11 +59,11 @@ class Perceptron(object):
         self : object
         """
 
-        rgen = np.random.RandomState(self.seed)
+        rgen = np.random.RandomState(self.random_state)
         self.w = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1])
         self.n_miscl = []
 
-        for epoch in range(self.n_epoch):
+        for iter in range(self.n_iter):
 
             miscl = 0
 
@@ -130,7 +130,7 @@ plt.legend(loc="upper left")
 
 # Initialize a perceptron object
 
-ppn = Perceptron(eta=0.1, n_epoch=10)
+ppn = Perceptron(eta=0.1, n_iter=10)
 
 
 # Learn from data via the fit method (the predict method is called in fit method to learn the weights)
@@ -138,11 +138,11 @@ ppn = Perceptron(eta=0.1, n_epoch=10)
 ppn.fit(X, y)
 
 
-# Plot the number of n_misclassifications per epoch
+# Plot the number of n_misclassifications per iter
 
 plt.figure()
 plt.plot(range(1, len(ppn.n_miscl) + 1), ppn.n_miscl, marker="o")
-plt.xlabel("Epochs")
+plt.xlabel("iters")
 plt.ylabel("Number of n_misclassifications")
 
 
