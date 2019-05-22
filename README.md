@@ -1,26 +1,35 @@
-# Content of the programs:
+# Machine Learning Models
 
-## 02_perceptron
+*Author*: Nicolo Ceneda \
+*Contact*: nicolo.ceneda@student.unisg.ch \
+*Website*: [www.nicoloceneda.com](http://www.nicoloceneda.com) \
+*Institution*: University of St Gallen \
+*Course*: Master of Banking and Finance \
+*Last update*: 20 May 2019
 
-Implementation of a single layer perceptron:
-1. Design the perceptron
-2. Prepare the data
-3. Train the perceptron
-4. Visualize the decision boundaries and verify that the training sample is classified correctly. 
+## Project Structure
+<pre>
+│
+├── 02_perceptron.py                      <--  Implementation of a single layer perceptron.
+│                                              
+![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58213656-42bb9e80-7cf3-11e9-9745-4079b0714e0e.png)
+│ 
+├── extract_data.py                       <--  Command line interface to extract and clean trade 
+│        │                                     data downloaded from the wrds database.
+│        │
+│        └── extract_data_functions.py    <--  General functions called in 'extract_data.py'
+│
+│
+├── data_analysis.py                      <--  Analysis of general data.
+│
+│
+├── extract_data_bg.sh                    <--  Wrapper script to execute 'extract_data.py' in 
+│                                              'debugging' mode.
+│
+├── extract_data_sl.sh                    <--  Wrapper script to execute extract_data.py in 
+│                                              'symbol_list' mode.
+│
+└── nasdaq100.xlsx                        <--  List of securities extracted
+</pre>
 
-## 2_adalineGD
-
-Implementation of a single layer Adaptive Linear Neuron via a gradient descent algorithm. Convergence is checked without and with a standardization.
-    
-## 2_adalineSGD
-
-Implementation of a single layer Adaptive Linear Neuron via a stochastic gradient descent algorithm. A standardization is applied.
-
-## 13_netinputTF
-
-Implementation of a net input z of a sample point x in a one dimensional dataset with weights w and bias b via low
-    level TensorFlow API.
-    
-## 13_arrayTF
-
-Creation of a simple rank-3 tensor of size batchsize x2 x3, reshaping of it, and calculation of the column sums and mean via low level TensorFlow API.
+![z_Original_Aggregated](https://user-images.githubusercontent.com/47401951/58116887-b1b6cb80-7bfd-11e9-9457-cca3e8dd3fea.png)
