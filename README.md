@@ -7,13 +7,13 @@
 *Course*: Master of Banking and Finance \
 *Last update*: 20 May 2019
 
-## 02_perceptron.py
+**02_perceptron.py**
 
 Implementation of a single layer perceptron.
 
 ![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58213775-a219ae80-7cf3-11e9-8593-9c82b3aeb686.png)
 
-## 02_adaline_gd.py
+**02_adaline_gd.py**
 
 Implementation of a single layer adaptive linear neuron (with standardization) via gradient descent algorithm.
 
