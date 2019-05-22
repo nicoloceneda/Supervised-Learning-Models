@@ -11,9 +11,10 @@
 <pre>
 │
 ├── 02_perceptron.py                      <--  Implementation of a single layer perceptron.
-│                                              
-![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58213656-42bb9e80-7cf3-11e9-9745-4079b0714e0e.png)
+│   
 </pre>
+![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58213656-42bb9e80-7cf3-11e9-9745-4079b0714e0e.png)
+
 <pre>
 │ 
 ├── extract_data.py                       <--  Command line interface to extract and clean trade 
