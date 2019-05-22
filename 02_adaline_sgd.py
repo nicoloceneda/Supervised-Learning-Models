@@ -4,7 +4,10 @@
 """
 
 
+# ------------------------------------------------------------------------------------------------------------------------------------------
 # 0. IMPORT LIBRARIES AND/OR MODULES
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
 
 import numpy as np
 import pandas as pd
@@ -12,7 +15,10 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as clr
 
 
+# ------------------------------------------------------------------------------------------------------------------------------------------
 # 1. IMPLEMENT THE ADALINE
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
 
 class AdalineSGD(object):
 
@@ -25,7 +31,7 @@ class AdalineSGD(object):
     n_iter : int
         Passes over the training dataset.
     random_state : int
-        Random number generator random_state for random weight initialization.
+        Random number generator seed for random weight initialization.
     shuffle : bool (default: True)
         If set to True, it shuffles the training dataset every iter to prevent cycles.
 
@@ -52,7 +58,7 @@ class AdalineSGD(object):
         -----------
         X : array-like, shape = [n_samples, n_features]
             Training vectors, where n_samples is the number of samples and n_features is the number of features.
-        Y : array-like shape = [n_samples]
+        Y : array-like shape = [n_samples, ]
             Target values.
 
         Returns:
@@ -64,18 +70,22 @@ class AdalineSGD(object):
         self.w = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1])
         self.avg_cost_fun = []
 
-        for iter in range(self.n_iter):
+        for iteration in range(self.n_iter):
 
             if self.shuffle:
+
                 X, y = self.shuffler(X, y)
 
             cost = []
+            # cost = 0
 
             for Xi, yi in zip(X, y):
 
                 cost.append(self.update_weights(Xi, yi))
+                # cost += self.update_weights(Xi, yi)
 
             self.avg_cost_fun.append(sum(cost) / len(cost))
+            # self.avg_cost_fun.append(sum(cost) / len(y))
 
         return self
 
@@ -86,7 +96,7 @@ class AdalineSGD(object):
         update = yi - self.activation(self.net_input(Xi))
         self.w[0] += self.eta * update
         self.w[1:] += self.eta * np.dot(Xi, update)
-        cost = 0.5 * update ** 2
+        cost = 0.5 * (update ** 2)
 
         return cost
 
@@ -120,7 +130,9 @@ class AdalineSGD(object):
         return prediction
 
 
+# ------------------------------------------------------------------------------------------------------------------------------------------
 # 2. PREPARE THE DATA
+# ------------------------------------------------------------------------------------------------------------------------------------------
 
 
 # Import the data
@@ -142,7 +154,7 @@ X = data.iloc[0:100, [0, 2]].to_numpy()
 
 # Apply the standardization to scale the features (it can be verified that the adaline does not converge without standardization)
 
-X_std = (X - np.mean(X, axis=0).reshape([1, 2])) / (np.std(X, axis=0).reshape([1, 2]))
+X_std = (X - np.mean(X, axis=0)) / np.std(X, axis=0)
 
 
 # Plot the features in a scatter plot
@@ -150,12 +162,15 @@ X_std = (X - np.mean(X, axis=0).reshape([1, 2])) / (np.std(X, axis=0).reshape([1
 plt.figure()
 plt.scatter(X_std[:50, 0], X_std[:50, 1], color="red", marker="o", label="Setosa")
 plt.scatter(X_std[50:100, 0], X_std[50:100, 1], color="blue", marker="x", label="Versicolor")
+plt.title("Scatter plot of the scaled features")
 plt.xlabel("Sepal length [standardized]")
 plt.ylabel("Petal length [standardized]")
 plt.legend(loc="upper left")
 
 
+# ------------------------------------------------------------------------------------------------------------------------------------------
 # 3. TRAIN THE ADALINE
+# ------------------------------------------------------------------------------------------------------------------------------------------
 
 
 # Initialize the adaline object
@@ -172,12 +187,14 @@ ada.fit(X_std, y)
 
 plt.figure()
 plt.plot(range(1, len(ada.avg_cost_fun) + 1), ada.avg_cost_fun, marker="o")
+plt.title("AdalineSGD with standard")
 plt.xlabel("iters")
 plt.ylabel("Average Sum of squared errors")
-plt.title("AdalineSGD with standard. - eta = 0.01")
 
 
+# ------------------------------------------------------------------------------------------------------------------------------------------
 # 4. VISUALIZE THE DECISION BOUNDARIES AND VERIFY THAT THE TRAINING SAMPLE IS CLASSIFIED CORRECTLY
+# ------------------------------------------------------------------------------------------------------------------------------------------
 
 
 # Function to visualize the decision boundaries
@@ -194,7 +211,7 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
         classifications converged (even though to a non-zero value) in the training phase, we expect the perceptron to correctly classify all
         possible combinations of features.
 
-        Reshape the vector of predictions as the x0_grid.
+        Reshape the vector of predictions as the X0_grid.
 
         Draw filled contours, where all possible combinations of features are associated to a Z, which is +1 or -1.
 
@@ -204,22 +221,23 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
 
     cmap = clr.ListedColormap(['red', 'blue'])
 
-    x0_min, x0_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    x1_min, x1_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    x0_grid, x1_grid = np.meshgrid(np.arange(x0_min, x0_max, resolution), np.arange(x1_min, x1_max, resolution))
-    x0x1_combs = np.array([x0_grid.ravel(), x1_grid.ravel()]).T
+    X0_min, X0_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+    X1_min, X1_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    X0_grid, X1_grid = np.meshgrid(np.arange(X0_min, X0_max, resolution), np.arange(X1_min, X1_max, resolution))
+    X0X1_combs = np.array([X0_grid.ravel(), X1_grid.ravel()]).T
 
-    Z = classifier.predict(x0x1_combs)
+    Z = classifier.predict(X0X1_combs)
 
-    Z = Z.reshape(x0_grid.shape)
+    Z = Z.reshape(X0_grid.shape)
 
     plt.figure()
-    plt.contourf(x0_grid, x1_grid, Z, alpha=0.3, cmap=cmap)
-    plt.xlim(x0_min, x0_max)
-    plt.ylim(x1_min, x1_max)
+    plt.contourf(X0_grid, X1_grid, Z, alpha=0.3, cmap=cmap)
+    plt.xlim(X0_min, X0_max)
+    plt.ylim(X1_min, X1_max)
 
-    plt.scatter(X_std[:50, 0], X_std[:50, 1], alpha=0.8, color='red', marker='o', label='+1', edgecolor='black')
-    plt.scatter(X_std[50:100, 0], X_std[50:100, 1], color='blue', marker='x', label='-1', edgecolor='black')
+    plt.scatter(X_std[:50, 0], X_std[:50, 1], alpha=0.8, color='red', marker='+', label='+1')
+    plt.scatter(X_std[50:100, 0], X_std[50:100, 1], color='blue', marker='+', label='-1')
+    plt.title('Decision boundary and training sample')
     plt.xlabel('Sepal length [standardized]')
     plt.ylabel('Petal length [standardized]')
     plt.legend(loc='upper left')
@@ -230,7 +248,9 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
 plot_decision_regions(X_std, y, classifier=ada)
 
 
+# ------------------------------------------------------------------------------------------------------------------------------------------
 # 5. GENERAL
+# ------------------------------------------------------------------------------------------------------------------------------------------
 
 
 # Show plots
