@@ -136,6 +136,7 @@ plt.title("Scatter plot of the scaled features")
 plt.xlabel("Sepal length [standardized]")
 plt.ylabel("Petal length [standardized]")
 plt.legend(loc="upper left")
+plt.savefig('images/02_adaline_gd/Scatter_plot_of_the_scaled_features.png')
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -160,6 +161,7 @@ plt.plot(range(1, len(ada.cost_fun) + 1), ada.cost_fun, marker="o")
 plt.title("AdalineGD with standardization")
 plt.xlabel("n_iter")
 plt.ylabel("Sum of squared errors")
+plt.savefig('images/02_adaline_gd/AdalineGD_with_standardization.png')
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -211,6 +213,7 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
     plt.xlabel('Sepal length [standardized]')
     plt.ylabel('Petal length [standardized]')
     plt.legend(loc='upper left')
+    plt.savefig('images/02_adaline_gd/Decision_boundary_and_training_sample.png')
 
 
 # Plot the decision region and the data

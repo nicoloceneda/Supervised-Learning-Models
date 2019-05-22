@@ -130,6 +130,7 @@ plt.title("Scatter plot of the features")
 plt.xlabel("Sepal length [cm]")
 plt.ylabel("Petal length [cm]")
 plt.legend(loc="upper left")
+plt.savefig('images/02_perceptron/Scatter_plot_of_the_features.png')
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -154,6 +155,7 @@ plt.plot(range(1, len(ppn.errors) + 1), ppn.errors, marker="o")
 plt.title("Number of misclassifications per epoch")
 plt.xlabel("n_iter")
 plt.ylabel("errors")
+plt.savefig('images/02_perceptron/Number_of_misclassifications_per_epoch.png')
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -205,6 +207,7 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
     plt.xlabel('Sepal length [cm]')
     plt.ylabel('Petal length [cm]')
     plt.legend(loc='upper left')
+    plt.savefig('images/02_perceptron/Decision_boundary_and_training_sample.png')
 
 
 # Plot the decision region and the data

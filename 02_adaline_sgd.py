@@ -76,16 +76,13 @@ class AdalineSGD(object):
 
                 X, y = self.shuffler(X, y)
 
-            cost = []
-            # cost = 0
+            cost = 0
 
             for Xi, yi in zip(X, y):
 
-                cost.append(self.update_weights(Xi, yi))
-                # cost += self.update_weights(Xi, yi)
+                cost += self.update_weights(Xi, yi)
 
-            self.avg_cost_fun.append(sum(cost) / len(cost))
-            # self.avg_cost_fun.append(sum(cost) / len(y))
+            self.avg_cost_fun.append(cost / len(y))
 
         return self
 
@@ -166,6 +163,7 @@ plt.title("Scatter plot of the scaled features")
 plt.xlabel("Sepal length [standardized]")
 plt.ylabel("Petal length [standardized]")
 plt.legend(loc="upper left")
+plt.savefig('images/02_adaline_sgd/Scatter_plot_of_the_scaled_features.png')
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -190,6 +188,7 @@ plt.plot(range(1, len(ada.avg_cost_fun) + 1), ada.avg_cost_fun, marker="o")
 plt.title("AdalineSGD with standard")
 plt.xlabel("iters")
 plt.ylabel("Average Sum of squared errors")
+plt.savefig('images/02_adaline_sgd/AdalineSGD_with_standard.png')
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -241,6 +240,7 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
     plt.xlabel('Sepal length [standardized]')
     plt.ylabel('Petal length [standardized]')
     plt.legend(loc='upper left')
+    plt.savefig('images/02_adaline_sgd/Decision_02boundary_and_training_sample.png')
 
 
 # Plot the decision region and the data
