@@ -26,3 +26,8 @@
 **logistic_regression_gd.py:** Implementation of a single layer logistic regression via gradient descent algorithm.
 
 ![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58278607-b2399880-7d9c-11e9-9a3c-7c7ba4ad290a.png)
+
+**logistic_regression_gd_sl.py:** Implementation of a single layer logistic regression via gradient descent algorithm via sci-kit learn.
+
+
+![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58281144-b4065a80-7da2-11e9-8aea-f381de7342a1.png)
