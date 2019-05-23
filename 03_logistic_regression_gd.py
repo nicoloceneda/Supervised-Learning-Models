@@ -1,6 +1,6 @@
 """ logistic_regression_gd
     ----------------------
-    Implementation of a single layer logistic regression (with standardization) via gradient descent algorithm.
+    Implementation of a single layer logistic regression via gradient descent algorithm.
 """
 
 
