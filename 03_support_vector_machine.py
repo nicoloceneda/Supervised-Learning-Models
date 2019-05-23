@@ -1,6 +1,6 @@
-""" logistic_regression_gd_sl
-    -------------------------
-    Implementation of a single layer logistic regression via gradient descent algorithm via sci-kit learn.
+""" support_vector_machine
+    ----------------------
+    Implementation of a support vector machine.
 """
 
 
@@ -14,7 +14,7 @@ import numpy as np
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 
 import matplotlib.pyplot as plt
@@ -52,7 +52,7 @@ plt.title("Scatter plot of the features")
 plt.xlabel("Petal length [cm]")
 plt.ylabel("Petal width [cm]")
 plt.legend(loc="upper left")
-plt.savefig('images/03_logistic_regression_gd_sl/Scatter_plot_of_the_features.png')
+plt.savefig('images/03_support_vector_machine/Scatter_plot_of_the_features.png')
 
 
 # Separate the data into a train and a test subset with the same proportions of class labels as the input dataset
@@ -75,12 +75,12 @@ X_test_std = sc.transform(X_test)
 
 # Initialize a perceptron object
 
-lr = LogisticRegression(C=100, random_state=1)
+svm = SVC(kernel='linear', C=1, random_state=1)
 
 
 # Learn from data via the fit method
 
-lr.fit(X_train_std, y_train)
+svm.fit(X_train_std, y_train)
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -90,7 +90,7 @@ lr.fit(X_train_std, y_train)
 
 # Predict the classes of the features in the test set
 
-y_pred = lr.predict(X_test_std)
+y_pred = svm.predict(X_test_std)
 
 
 # Calculate the number of misclassifications
@@ -102,11 +102,11 @@ print('Misclassified samples: {}'.format(n_miscl))
 # Calculate the classification accuracy
 
 print('Accuracy: {}'.format(accuracy_score(y_test, y_pred)))
-print('Accuracy: {}'.format(lr.score(X_test_std, y_test)))
+print('Accuracy: {}'.format(svm.score(X_test_std, y_test)))
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
-# 3. VISUALIZE THE DECISION BOUNDARIES AND VERIFY HOW WELL THE LOGISTIC REGRESSION CLASSIFIES THE DIFFERENT SAMPLES
+# 3. VISUALIZE THE DECISION BOUNDARIES AND VERIFY HOW WELL THE SVM CLASSIFIES THE DIFFERENT SAMPLES
 # ------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -117,7 +117,7 @@ def plot_decision_regions(X, y, classifier, test_idx=None, resolution=0.02):
         Generate a matrix with two columns, where rows are all possible combinations of all numbers from min-1 to max+1 of the two series of
         features. The matrix with two columns is needed because the perceptron was trained on a matrix with such shape.
 
-        Use the predict method of the chosen classifier (lr) to predict the class corresponding to all the possible combinations of features
+        Use the predict method of the chosen classifier (svm) to predict the class corresponding to all the possible combinations of features
         generated in the above matrix. The predict method will use the weights learnt during the training phase.
 
         Reshape the vector of predictions as the X0_grid.
@@ -157,12 +157,12 @@ def plot_decision_regions(X, y, classifier, test_idx=None, resolution=0.02):
 
 X_combined_std = np.vstack((X_train_std, X_test_std))
 y_combined = np.hstack((y_train, y_test))
-plot_decision_regions(X=X_combined_std, y=y_combined, classifier=lr, test_idx=range(105, 150))
+plot_decision_regions(X=X_combined_std, y=y_combined, classifier=svm, test_idx=range(105, 150))
 plt.title('Decision boundary and training sample')
 plt.xlabel('Petal length [standardized]')
 plt.ylabel('Petal width [standardized]')
 plt.legend(loc='upper left')
-plt.savefig('images/03_logistic_regression_gd_sl/Decision_boundary_and_training_sample.png')
+plt.savefig('images/03_support_vector_machine/Decision_boundary_and_training_sample.png')
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
