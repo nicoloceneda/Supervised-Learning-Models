@@ -1,6 +1,6 @@
-""" adaline_gd
-    ----------
-    Implementation of a single layer adaptive linear neuron (with standardization) via gradient descent algorithm.
+""" logistic_regression_gd
+    ----------------------
+    Implementation of a single layer logistic regression (with standardization) via gradient descent algorithm.
 """
 
 
@@ -10,7 +10,10 @@
 
 
 import numpy as np
-import pandas as pd
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+
 import matplotlib.pyplot as plt
 import matplotlib.colors as clr
 
@@ -20,9 +23,9 @@ import matplotlib.colors as clr
 # ------------------------------------------------------------------------------------------------------------------------------------------
 
 
-class AdalineGD(object):
+class LogisticRegressionGD(object):
 
-    """ ADAptive LInear NEuron classifier
+    """ Logistic Regression Classifier using gradient descent
 
     Parameters:
     -----------
@@ -38,10 +41,10 @@ class AdalineGD(object):
     w : 1d-array
         Weights after fitting.
     cost_fun : list
-        Sum of squares cost function value in each iter.
+        Logistic cost function value in each epoch.
     """
 
-    def __init__(self, eta=0.01, n_iter=50, random_state=1):
+    def __init__(self, eta=0.05, n_iter=100, random_state=1):
 
         self.eta = eta
         self.n_iter = n_iter
@@ -72,7 +75,7 @@ class AdalineGD(object):
             update = y - (self.activation(self.net_input(X)))
             self.w[0] += self.eta * np.sum(update)
             self.w[1:] += self.eta * np.dot(X.T, update)
-            cost = 0.5 * np.sum(update ** 2)
+            cost = -y.dot(np.log(self.activation(self.net_input(X)))) - ((1 - y).dot(np.log(1 - self.activation(self.net_input(X)))))
             self.cost_fun.append(cost)
 
         return self
@@ -87,15 +90,15 @@ class AdalineGD(object):
 
     def activation(self, z):
 
-        """ Return the linear activation """
+        """ Return the logistic sigmoid actiavtion """
 
-        return z
+        return 1. / (1. + np.exp(-np.clip(z, -250, 250)))
 
     def predict(self, X):
 
         """ Return the class label after unit step function """
 
-        prediction = np.where(self.activation(self.net_input(X)) >= 0.0, 1, -1)
+        prediction = np.where(self.net_input(X) >= 0.0, 1, 0)
 
         return prediction
 
@@ -105,38 +108,37 @@ class AdalineGD(object):
 # ------------------------------------------------------------------------------------------------------------------------------------------
 
 
-# Import the data
+# Import the dataset
 
-data = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data', header=None)
-print(data.head())
+iris = load_iris()
+print(iris)
 
 
 # Extract the class labels
 
-y = data.iloc[0:100, 4].to_numpy()
-y = np.where(y == "Iris-setosa", -1, 1)
+y = iris.target[:100]
 
 
 # Extract the features
 
-X = data.iloc[0:100, [0, 2]].to_numpy()
-
-
-# Apply the standardization to scale the features (it can be verified that the adaline does not converge without standardization)
-
-X_std = (X - np.mean(X, axis=0)) / np.std(X, axis=0)
+X = iris.data[:100, [2, 3]]
 
 
 # Plot the features in a scatter plot
 
 plt.figure()
-plt.scatter(X_std[:50, 0], X_std[:50, 1], color="red", marker="+", label="Setosa")
-plt.scatter(X_std[50:100, 0], X_std[50:100, 1], color="blue", marker="+", label="Versicolor")
-plt.title("Scatter plot of the scaled features")
-plt.xlabel("Sepal length [standardized]")
-plt.ylabel("Petal length [standardized]")
+plt.scatter(X[:50, 0], X[:50, 1], color="red", edgecolor='black', marker="+", label="Setosa")
+plt.scatter(X[50:100, 0], X[50:100, 1], color="blue", edgecolor='black', marker="+", label="Versicolor")
+plt.title("Scatter plot of the features")
+plt.xlabel("Petal length [cm]")
+plt.ylabel("Petal width [cm]")
 plt.legend(loc="upper left")
-plt.savefig('images/02_adaline_gd/Scatter_plot_of_the_scaled_features.png')
+plt.savefig('images/03_logistic_regression_gd/Scatter_plot_of_the_features.png')
+
+
+# Separate the data into a train and a test subset with the same proportions of class labels as the input dataset
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1, stratify=y)
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -146,22 +148,22 @@ plt.savefig('images/02_adaline_gd/Scatter_plot_of_the_scaled_features.png')
 
 # Initialize the adaline object
 
-ada = AdalineGD(eta=0.01, n_iter=15)
+lrgd = LogisticRegressionGD(eta=0.05, n_iter=30)
 
 
 # Learn from the data via the fit method (the activation method, rather than predict method, is called in the fit method to learn the weights)
 
-ada.fit(X_std, y)
+lrgd.fit(X_train, y_train)
 
 
 # Plot the cost function per iter
 
 plt.figure()
-plt.plot(range(1, len(ada.cost_fun) + 1), ada.cost_fun, marker="o")
-plt.title("AdalineGD with standardization")
+plt.plot(range(1, len(lrgd.cost_fun) + 1), lrgd.cost_fun, marker="o")
+plt.title("LogisticRegressionGD")
 plt.xlabel("n_iter")
-plt.ylabel("Sum of squared errors")
-plt.savefig('images/02_adaline_gd/AdalineGD_with_standardization.png')
+plt.ylabel("Logistic cost function")
+plt.savefig('images/03_logistic_regression_gd/AdalineGD_with_standardization.png')
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -215,12 +217,12 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
 
 # Plot the decision region and the data
 
-plot_decision_regions(X_std, y, classifier=ada)
+plot_decision_regions(X_train, y_train, classifier=lrgd)
 plt.title('Decision boundary and training sample')
-plt.xlabel('Sepal length [standardized]')
-plt.ylabel('Petal length [standardized]')
+plt.xlabel('Petal length')
+plt.ylabel('Petal width')
 plt.legend(loc='upper left')
-plt.savefig('images/02_adaline_gd/Decision_boundary_and_training_sample.png')
+plt.savefig('images/03_logistic_regression_gd/Decision_boundary_and_training_sample.png')
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -231,3 +233,5 @@ plt.savefig('images/02_adaline_gd/Decision_boundary_and_training_sample.png')
 # Show plots
 
 plt.show()
+
+

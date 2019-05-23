@@ -218,7 +218,8 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
         scatter plot and verify that they fall inside the correct region.
     """
 
-    cmap = clr.ListedColormap(['red', 'blue'])
+    colors = ('red', 'blue', 'green')
+    cmap = clr.ListedColormap(colors[:len(np.unique(y))])
 
     X0_min, X0_max = X[:, 0].min() - 1, X[:, 0].max() + 1
     X1_min, X1_max = X[:, 1].min() - 1, X[:, 1].max() + 1
@@ -234,18 +235,19 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
     plt.xlim(X0_min, X0_max)
     plt.ylim(X1_min, X1_max)
 
-    plt.scatter(X_std[:50, 0], X_std[:50, 1], alpha=0.8, color='red', marker='+', label='+1')
-    plt.scatter(X_std[50:100, 0], X_std[50:100, 1], color='blue', marker='+', label='-1')
-    plt.title('Decision boundary and training sample')
-    plt.xlabel('Sepal length [standardized]')
-    plt.ylabel('Petal length [standardized]')
-    plt.legend(loc='upper left')
-    plt.savefig('images/02_adaline_sgd/Decision_02boundary_and_training_sample.png')
+    for pos, cl in enumerate(np.unique(y)):
+
+        plt.scatter(x=X[y == cl, 0], y=X[y == cl, 1], alpha=0.8, color=colors[pos], marker='+', label=cl)
 
 
 # Plot the decision region and the data
 
 plot_decision_regions(X_std, y, classifier=ada)
+plt.title('Decision boundary and training sample')
+plt.xlabel('Sepal length [standardized]')
+plt.ylabel('Petal length [standardized]')
+plt.legend(loc='upper left')
+plt.savefig('images/02_adaline_sgd/Decision_02boundary_and_training_sample.png')
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------

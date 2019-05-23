@@ -18,7 +18,7 @@ from sklearn.linear_model import Perceptron
 from sklearn.metrics import accuracy_score
 
 import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap
+import matplotlib.colors as clr
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -128,8 +128,8 @@ def plot_decision_regions(X, y, classifier, test_idx=None, resolution=0.02):
         scatter plot and verify that they fall inside the correct region.
     """
 
-    colors = ('red', 'blue', 'lightgreen', 'gray', 'cyan')
-    cmap = ListedColormap(colors[:len(np.unique(y))])
+    colors = ('red', 'blue', 'green')
+    cmap = clr.ListedColormap(colors[:len(np.unique(y))])
 
     X0_min, X0_max = X[:, 0].min() - 1, X[:, 0].max() + 1
     X1_min, X1_max = X[:, 1].min() - 1, X[:, 1].max() + 1
@@ -146,11 +146,11 @@ def plot_decision_regions(X, y, classifier, test_idx=None, resolution=0.02):
     plt.ylim(X1_min, X1_max)
 
     for pos, cl in enumerate(np.unique(y)):
-        plt.scatter(x=X[y == cl, 0], y=X[y == cl, 1], alpha=0.8, c=colors[pos], marker='+', label=cl)
+        plt.scatter(x=X[y == cl, 0], y=X[y == cl, 1], alpha=0.8, color=colors[pos], marker='+', label=cl)
 
     if test_idx:
         X_test, y_test = X[test_idx, :], y[test_idx]
-        plt.scatter(X_test[:, 0], X_test[:, 1], alpha=1.0, linewidth=1, c='', marker='s', edgecolor='black', label='test_set')
+        plt.scatter(X_test[:, 0], X_test[:, 1], alpha=1.0, linewidth=1, color='', marker='s', edgecolor='black', label='test_set')
 
 
 # Plot the decision region and the data
