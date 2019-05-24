@@ -43,4 +43,6 @@
 
 ![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58322686-ff138280-7e21-11e9-97c7-a14e72bd38e1.png)
 
+**03_random_forest_sl.py:** Implementation of a random forest via sci-kit learn.
 
+![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58324771-1bb2b900-7e28-11e9-8216-36db4a8631f9.png)
