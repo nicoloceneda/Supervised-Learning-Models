@@ -38,3 +38,9 @@
 **03_support_vector_machine_kernel_sl.py:** Implementation of a kernel support vector machine via sci-kit learn.
 
 ![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58313792-ac7c9b00-7e0e-11e9-835c-211358fa3624.png)
+
+**03_decision_tree_sl.py:** Implementation of a decision tree via sci-kit learn.
+
+![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58322686-ff138280-7e21-11e9-97c7-a14e72bd38e1.png)
+
+
