@@ -33,16 +33,20 @@
 
 **03_support_vector_machine_sl.py:** Implementation of a support vector machine via sci-kit learn.
 
-![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58313775-a1296f80-7e0e-11e9-9f4a-a60d5c35c991.png)
+![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58326114-21aa9900-7e2c-11e9-954c-a8e43622ef78.png)
 
 **03_support_vector_machine_kernel_sl.py:** Implementation of a kernel support vector machine via sci-kit learn.
 
-![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58313792-ac7c9b00-7e0e-11e9-835c-211358fa3624.png)
+![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58326126-2bcc9780-7e2c-11e9-92f4-efadcd16579c.png)
 
 **03_decision_tree_sl.py:** Implementation of a decision tree via sci-kit learn.
 
-![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58322686-ff138280-7e21-11e9-97c7-a14e72bd38e1.png)
+![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58326096-17889a80-7e2c-11e9-93d8-c483182066f5.png)
 
 **03_random_forest_sl.py:** Implementation of a random forest via sci-kit learn.
 
-![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58324771-1bb2b900-7e28-11e9-8216-36db4a8631f9.png)
+![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58326077-0d669c00-7e2c-11e9-9b15-11e7e2612ea1.png)
+
+**03_k_nearest_neighbor.py:** Implementation of a k-nearest neighbor classifier via sci-kit learn.
+
+![Decision_boundary_and_training_sample](https://user-images.githubusercontent.com/47401951/58326063-fe7fe980-7e2b-11e9-9be1-75ce4acacacf.png)
