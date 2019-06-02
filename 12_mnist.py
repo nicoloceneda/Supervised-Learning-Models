@@ -21,10 +21,10 @@ import matplotlib.pyplot as plt
 
 def load_mnist(path, kind='train'):
 
-    """ Load MNIST data from 'path' """
+    """Load MNIST data from `path`"""
 
-    labels_path = os.path.join(path, '{}-labels-idx1-ubyte'.format(kind))
-    images_path = os.path.join(path, '{}-images-idx3-ubyte'.format(kind))
+    labels_path = os.path.join(path, '%s-labels-idx1-ubyte' % kind)
+    images_path = os.path.join(path, '%s-images-idx3-ubyte' % kind)
 
     with open(labels_path, 'rb') as lbpath:
 
@@ -33,18 +33,18 @@ def load_mnist(path, kind='train'):
 
     with open(images_path, 'rb') as imgpath:
 
-        magic, num, rows, cols = struct.unpack('>IIII', imgpath.read(16))
-        images = np.fromfile(imgpath, dtype=np.int8).reshape(len(labels), 784)
+        magic, num, rows, cols = struct.unpack(">IIII", imgpath.read(16))
+        images = np.fromfile(imgpath, dtype=np.uint8).reshape(len(labels), 784)
         images = ((images / 255.) - .5) * 2
 
     return images, labels
 
 
-X_train, y_train = load_mnist('./mnist/', kind='train')
-print('Rows: {}, Columns: {}'.format(X_train.shape[0], X_train.shape[1]))
+X_train, y_train = load_mnist('', kind='train')
+print('Rows: %d, columns: %d' % (X_train.shape[0], X_train.shape[1]))
 
-X_test, y_test = load_mnist('./mnist/', kind='t10k')
-print('Rows: {}, Columns: {}'.format(X_test.shape[0], X_test.shape[1]))
+X_test, y_test = load_mnist('', kind='t10k')
+print('Rows: %d, columns: %d' % (X_test.shape[0], X_test.shape[1]))
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -54,13 +54,14 @@ print('Rows: {}, Columns: {}'.format(X_test.shape[0], X_test.shape[1]))
 
 # Print examples images of the different numbers
 
+
 fig, ax = plt.subplots(nrows=2, ncols=5, sharex=True, sharey=True)
 ax = ax.flatten()
 
-for pos in range(10):
+for i in range(10):
 
-    img = X_train[y_train == pos][0].reshape(28, 28)
-    ax[pos].imshow(img, cmap='Greys')
+    img = X_train[y_train == i][0].reshape(28, 28)
+    ax[i].imshow(img, cmap='Greys')
 
 ax[0].set_xticks([])
 ax[0].set_yticks([])
@@ -70,13 +71,13 @@ plt.show()
 
 # Print examples images of the same number
 
-fig, ax = plt.subplots(nrows=5, ncols=5, sharex=True, sharey=True)
+fig, ax = plt.subplots(nrows=5, ncols=5, sharex=True, sharey=True,)
 ax = ax.flatten()
 
-for pos in range(25):
+for i in range(25):
 
-    img = X_train[y_train == 7][pos].reshape(28, 28)
-    ax[pos].imshow(img, cmap='Greys')
+    img = X_train[y_train == 7][i].reshape(28, 28)
+    ax[i].imshow(img, cmap='Greys')
 
 ax[0].set_xticks([])
 ax[0].set_yticks([])
@@ -91,4 +92,5 @@ plt.show()
 
 # Compress and save the training and test datasets
 
-np.savez_compressed('./mnist/mnist_scaled.npz', X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test)
+np.savez_compressed('mnist_scaled_c.npz', X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test)
+np.savez('mnist_scaled_u.npz', X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test)
