@@ -48,6 +48,7 @@ class TfLinreg:
 
 lrmodel = TfLinreg(x_dim=X_train.shape[1], learning_rate=0.01)
 
+
 def train_linreg(sess, model, X_train, y_train, num_epochs=10):
 
     sess.run(model.init)
@@ -56,10 +57,11 @@ def train_linreg(sess, model, X_train, y_train, num_epochs=10):
 
     for i in range(num_epochs):
 
-        pos, cost = sess.run([model.optimizer, model.mean_cost], feed_dict={model.X: X_train, model.y:y_train})
+        _, cost = sess.run([model.optimizer, model.mean_cost], feed_dict={model.X: X_train, model.y:y_train})
         training_costs.append(cost)
 
     return training_costs
+
 
 sess = tf.Session(graph=lrmodel.g)
 training_costs = train_linreg(sess, lrmodel, X_train, y_train)
