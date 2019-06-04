@@ -40,9 +40,21 @@
 ├── 03_random_forest_sl.py                 <-- Implementation of a random forest via sci-kit learn.
 │
 ├── 03_k_nearest_neighbor.py               <-- Implementation of a k-nearest neighbor classifier  
-│                                              via sci-kit learn
+│                                              via sci-kit learn.
+│   
+├── 12_mnist.py                            <-- Import, standardize, compress and save the mnist 
+│                                              dataset
 │
-├── 
-└──
+├── 12_multilayer_perceptron.py            <-- Implementation of a multilayer perceptron.
+│
+├── 13_multilayer_perceptron_tf_k.py       <-- Implementation of a multilayer perceptron via 
+│                                              Tensorflow's Layers.
+│
+├── 13_multilayer_perceptron_tf_l.py       <-- Implementation of a multilayer perceptron via 
+│                                              Tensorflow's keras.
+│
+├── 13_ols_tf.py                           <-- Implementation of an OLS via Tensorflow.
+│
+└── 14_ols_tf.py                           <-- Implementation of an OLS via Tensorflow.
 </pre>
 
