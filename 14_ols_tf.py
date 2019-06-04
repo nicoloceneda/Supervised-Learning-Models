@@ -85,6 +85,7 @@ plt.plot(x, y, 'o')
 # 3. TRAIN
 # ------------------------------------------------------------------------------------------------------------------------------------------
 
+
 x_train, y_train = x[:100], y[:100]
 x_test, y_test = x[100:], y[100:]
 
@@ -102,9 +103,43 @@ with tf.Session(graph=g) as sess:
 
         print('Epoch {:3}: {:7.4f}'.format(epoch, c))
 
+    saver = tf.train.Saver()
+    saver.save(sess, './trained-model')
 
 # Plot the cost
 
 plt.figure()
 plt.plot(training_costs)
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# 4. RESTORE THE TRAINED MODEL AND FORECAST
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# Restore the trained model and predict
+
+g2 = tf.Graph()
+
+with tf.Session(graph=g2) as sess:
+
+    new_saver = tf.train.import_meta_graph('./trained-model.meta')
+    new_saver.restore(sess, './trained-model')
+
+    y_pred = sess.run('y_hat:0', feed_dict={'tf_x:0': x_test})
+
+
+# Plot the predictions
+
+plt.figure()
+plt.plot(x_train, y_train, 'bo')
+plt.plot(x_test, y_test, 'bo', alpha=0.3)
+plt.plot(x_test, y_pred.T[:, 0], '-r', lw=3)
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------------
+# 5. GENERAL
+# ------------------------------------------------------------------------------------------------------------------------------------------
+
+
 plt.show()
