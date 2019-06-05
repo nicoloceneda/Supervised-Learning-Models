@@ -57,6 +57,9 @@
 │
 ├── 14_ols_tf.py                           <-- Implementation of an OLS via Tensorflow.
 │
-└── 16_aclImdb.py                          <-- Extract and convert to csv the aclImdb database.
+├── 16_aclImdb.py                          <-- Extract and convert to csv the aclImdb database.
+│
+└── 16_rnn_tf.py                           <-- Implementation of a recurrent neural network via
+                                               Tensorflow.
 </pre>
 
