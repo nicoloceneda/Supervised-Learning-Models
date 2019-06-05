@@ -62,16 +62,20 @@ del X_train, X_test
 # ------------------------------------------------------------------------------------------------------------------------------------------
 
 
+# Set random seeds
+
+np.random.seed(123)
+tf.set_random_seed(123)
+
+
+# Build the graph
+
 n_features = X_train_std.shape[1]
 n_classes = len(np.unique(y_train))
-random_seed = 123
-np.random.seed(random_seed)
 
 g = tf.Graph()
 
 with g.as_default():
-
-    tf.set_random_seed(random_seed)
 
     tf_x = tf.placeholder(dtype=tf.float32, shape=(None, n_features), name='tf_x')
     tf_y = tf.placeholder(dtype=tf.int32, shape=None, name='tf_y')

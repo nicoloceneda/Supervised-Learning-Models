@@ -1,6 +1,6 @@
 """ mnist
     -----
-    Import, standardize, compress and save the mnist dataset
+    Import, standardize, compress and save the mnist dataset.
 """
 
 
