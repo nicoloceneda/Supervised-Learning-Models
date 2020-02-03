@@ -1,12 +1,12 @@
-""" perceptron
+""" PERCEPTRON
     ----------
     Implementation of a single layer perceptron.
 """
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
-# 0. IMPORT LIBRARIES AND/OR MODULES
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+# 0. IMPORT LIBRARIES
+# -------------------------------------------------------------------------------
 
 
 import numpy as np
@@ -15,93 +15,106 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as clr
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # 1. DESIGN THE PERCEPTRON
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
-class Perceptron(object):
+class Perceptron:
 
     """ Perceptron classifier
 
     Parameters:
-    -----------
+    ----------
     eta : float
-        Learning rate (between 0.0 and 1.0).
-    n_iter : int
-        Passes over the training dataset.
-    random_state : int
-        Random number generator seed for random weight initialization.
+        Learning rate (between 0.0 and 1.0)
+    n_epoch : int
+        Number of epochs.
 
-    Attributes:
-    -----------
-    w : 1d-array
-        Weights after fitting.
-    errors : list
-        Number of n_misclassifications (hence weight updates) in each iter.
-    """
+    Attributed:
+    ----------
+    w : array, shape = [n_features, ]
+        Weights after fitting, where n_features is the number of features.
+    n_misclass : list
+        Number of misclassifications (hence weight updates) in each epoch.
+"""
 
-    def __init__(self, eta=0.01, n_iter=50, random_state=1):
+    def __init__(self, eta=0.01, n_epoch=100):
 
         self.eta = eta
-        self.n_iter = n_iter
-        self.random_state = random_state
+        self.n_epoch = n_epoch
 
     def fit(self, X, y):
 
         """ Fit training data
 
-        Parameters:
-        -----------
-        X : array-like, shape = [n_samples, n_features]
-            Training matrix, where n_samples is the number of samples and n_features is the number of features.
-        y : array-like, shape = [n_samples, ]
-            Target values.
+            Parameters:
+            ----------
+            X : array, shape = [n_samples, n_features]
+                Training matrix, where n_samples is the number of samples and n_features is the number of features.
+            y : array, shape = [n_samples, ]
+                Target values.
 
-        Returns:
-        --------
-        self : object
+            Returns:
+            -------
+            self : object
         """
 
-        rgen = np.random.RandomState(self.random_state)
+        rgen = np.random.RandomState(seed=1)
         self.w = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1])
-        self.errors = []
+        self.n_misclass = []
 
-        for iteration in range(self.n_iter):
+        for epoch in range(self.n_epoch):
 
-            errors = 0
+            misclass = 0
 
             for Xi, yi in zip(X, y):
 
                 update = self.eta * (yi - self.predict(Xi))
                 self.w[0] += update
                 self.w[1:] += update * Xi
-                errors += int(update != 0)
+                misclass += int(update != 0.0)
 
-            self.errors.append(errors)
+            self.n_misclass.append(misclass)
 
         return self
 
     def net_input(self, X):
 
-        """ Return the net input """
+        """ Calculate the net input
 
-        net_input = np.dot(X, self.w[1:]) + self.w[0]
+            Parameters:
+            ----------
+            X : array, shape = [n_samples, n_features]
+                Training matrix, where n_samples is the number of samples and n_features is the number of features.
 
-        return net_input
+            Returns:
+            -------
+            net_input : float
+        """
+
+        return self.w[0] + np.dot(X, self.w[1:])
 
     def predict(self, X):
 
-        """ Return the class label after unit step function """
+        """ Return the class label after unit step function
 
-        prediction = np.where(self.net_input(X) >= 0.0, 1, -1)
+            Parameters:
+            ----------
+            X : array, shape = [n_samples, n_features]
+                Training matrix, where n_samples is the number of samples and n_features is the number of features.
 
-        return prediction
+            Returns:
+            -------
+            predict : int
+        """
+
+        return np.where(self.net_input(X) >= 0, 1, -1)
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # 2. PREPARE THE DATA
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 # Import the dataset
@@ -112,38 +125,38 @@ print(data.head())
 
 # Extract the class labels
 
-y = data.iloc[0:100, 4].to_numpy()
-y = np.where(y == "Iris-setosa", -1, 1)
+y = data.iloc[:100, 4].to_numpy()
+y = np.where(y == 'Iris-setosa', -1, 1)
 
 
 # Extract the features
 
-X = data.iloc[0:100, [0, 2]].to_numpy()
+X = data.iloc[:100, [0,2]].to_numpy()
 
 
 # Plot the features in a scatter plot
 
 plt.figure()
-plt.scatter(X[:50, 0], X[:50, 1], color="red", marker="+", label="Setosa")
-plt.scatter(X[50:100, 0], X[50:100, 1], color="blue", marker="+", label="Versicolor")
-plt.title("Scatter plot of the features")
-plt.xlabel("Sepal length [cm]")
-plt.ylabel("Petal length [cm]")
-plt.legend(loc="upper left")
+plt.scatter(X[:50, 0], X[:50, 1], color='red', marker='+', label='Setosa')
+plt.scatter(X[50:, 0], X[50:, 1], color='blue', marker='+', label='Versicolor')
+plt.title('Scatter plot of the features')
+plt.xlabel('Sepal length [cm]')
+plt.ylabel('Petal length [cm]')
+plt.legend(loc='upper left')
 plt.savefig('images/02_perceptron/Scatter_plot_of_the_features.png')
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # 3. TRAIN THE PERCEPTRON
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 # Initialize a perceptron object
 
-ppn = Perceptron(eta=0.1, n_iter=10)
+ppn = Perceptron(eta=0.1, n_epoch=10)
 
 
-# Learn from data via the fit method (the predict method is called in fit method to learn the weights)
+# Learn from the data via the fit method
 
 ppn.fit(X, y)
 
@@ -151,19 +164,19 @@ ppn.fit(X, y)
 # Plot the number of misclassifications per epoch
 
 plt.figure()
-plt.plot(range(1, len(ppn.errors) + 1), ppn.errors, marker="o")
-plt.title("Number of misclassifications per epoch")
-plt.xlabel("n_iter")
-plt.ylabel("errors")
+plt.plot(range(1, len(ppn.n_misclass) + 1), ppn.n_misclass, marker='o')
+plt.title('Number of misclassifications per epoch')
+plt.xlabel('Epoch')
+plt.ylabel('Number of misclassifications')
 plt.savefig('images/02_perceptron/Number_of_misclassifications_per_epoch.png')
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
-# 4. VISUALIZE THE DECISION BOUNDARIES AND VERIFY THAT THE TRAINING SAMPLE IS CLASSIFIED CORRECTLY
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+# 4. PLOT THE DECISION BOUNDARY AND VERIFY THAT THE TRAINING SAMPLE IS CLASSIFIED CORRECTLY
+# -------------------------------------------------------------------------------
 
 
-# Function to visualize the decision boundaries
+# Function to plot the decision boundary
 
 def plot_decision_regions(X, y, classifier, resolution=0.02):
 
@@ -217,9 +230,9 @@ plt.legend(loc='upper left')
 plt.savefig('images/02_perceptron/Decision_boundary_and_training_sample.png')
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # 5. GENERAL
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 # Show plots
