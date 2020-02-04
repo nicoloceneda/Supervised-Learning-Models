@@ -180,7 +180,7 @@ plt.savefig('images/02_perceptron/Number_of_misclassifications_per_epoch.png')
 
 def plot_decision_regions(X, y, classifier, resolution=0.02):
 
-    """ Create a colormap.
+    """ Create a colormap object.
 
         Generate a matrix with two columns, where rows are all possible combinations of all numbers from min-1 to max+1 of the two series of
         features. The matrix with two columns is needed because the perceptron was trained on a matrix with such shape.
