@@ -24,20 +24,20 @@ class Perceptron:
 
     """ Perceptron classifier
 
-    Parameters:
-    ----------
-    eta : float
-        Learning rate (between 0.0 and 1.0)
-    n_epochs : int
-        Number of epochs.
+        Parameters:
+        ----------
+        eta : float
+            Learning rate (between 0.0 and 1.0)
+        n_epochs : int
+            Number of epochs.
 
-    Attributes:
-    ----------
-    w : array, shape = [n_features, ]
-        Weights after fitting, where n_features is the number of features.
-    n_misclass : list
-        Number of misclassifications (hence weight updates) in each epoch.
-"""
+        Attributes:
+        ----------
+        w : array, shape = [n_features, ]
+            Weights after fitting, where n_features is the number of features.
+        n_misclass : list
+            Number of misclassifications (hence weight updates) in each epoch.
+    """
 
     def __init__(self, eta=0.01, n_epochs=100):
 
@@ -48,16 +48,16 @@ class Perceptron:
 
         """ Fit training set
 
-        Parameters:
-        ----------
-        X : array, shape = [n_samples, n_features]
-            Training matrix, where n_samples is the number of samples and n_features is the number of features.
-        y : array, shape = [n_samples, ]
-            Target values.
+            Parameters:
+            ----------
+            X : array, shape = [n_samples, n_features]
+                Training matrix, where n_samples is the number of samples and n_features is the number of features.
+            y : array, shape = [n_samples, ]
+                Target values.
 
-        Returns:
-        -------
-        self : object
+            Returns:
+            -------
+            self : object
         """
 
         rgen = np.random.RandomState(seed=1)
@@ -70,46 +70,34 @@ class Perceptron:
 
             for Xi, yi in zip(X, y):
 
-                update = self.eta * (yi - self.predict(self.net_input(Xi)))
-                self.w[0] += update
-                self.w[1:] += update * Xi
+                update = yi - self.step_activ(Xi)
+                self.w[0] += self.eta * update
+                self.w[1:] += self.eta * update * Xi
                 misclass += int(update != 0)
 
             self.n_misclass.append(misclass)
 
         return self
 
-    def net_input(self, Xi):
+    def step_activ(self, X):
 
-        """ Calculate the net input
+        """ Calculate the net input and return the class label prediction after the unit step function
+            (Used in the fit method and in plot_decision_regions function)
 
-        Parameters:
-        ----------
-        Xi : array, shape = [n_features, ]
-            Training sample, where n_features is the number of features.
+            Parameters:
+            ----------
+            X : array, shape = [n_features, ] in fit method
+                array, shape = [X0X1_combs.shape[0], n_features] in plot_decision_regions function
 
-        Returns:
-        -------
-        net_input : float
-        """
+            Returns:
+            -------
+            step_activ : int in fit method
+                         array, shape = [X0X1_combs.shape[0], ] in plot_decision_regions function
+            """
 
-        return self.w[0] + np.dot(Xi, self.w[1:])
+        net_input = self.w[0] + np.dot(X, self.w[1:])
 
-    def predict(self, z):
-
-        """ Return the class label prediction after the unit step function
-
-        Parameters:
-        ----------
-        z : float
-            Net input.
-
-        Returns:
-        -------
-        predict : int
-        """
-
-        return np.where(z >= 0, 1, -1)
+        return np.where(net_input >= 0, 1, -1)
 
 
 # -------------------------------------------------------------------------------
@@ -183,12 +171,13 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
     """ Create a colormap object.
 
         Generate a matrix with two columns, where rows are all possible combinations of all numbers from min-1 to max+1 of the two series of
-        features. The matrix with two columns is needed because the perceptron was trained on a matrix with such shape.
+        features. The matrix with two columns is needed because the perceptron was trained on a matrix with such shape. This is used as the
+        test set.
 
-        Use the predict method of the chosen classifier (ppn) to predict the class corresponding to all the possible combinations of features
-        generated in the above matrix. The predict method will use the weights learnt during the training phase: since the number of mis-
-        classifications converged to zero in the training phase, we expect the perceptron to correctly classify all possible combinations of
-        features.
+        Use the step_activ method of the chosen classifier (ppn) to predict the class corresponding to all the possible combinations of fea-
+        tures generated in the above matrix. The step_activ method will use the weights learnt during the training phase: since the number of
+        misclassifications converged during the training phase, we expect the perceptron to find a decision boundary that correctly classifies
+        all the samples in the training set.
 
         Reshape the vector of predictions as the X0_grid.
 
@@ -206,7 +195,7 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
     X0_grid, X1_grid = np.meshgrid(np.arange(X0_min, X0_max, resolution), np.arange(X1_min, X1_max, resolution))
     X0X1_combs = np.array([X0_grid.ravel(), X1_grid.ravel()]).T
 
-    Z = classifier.predict(X0X1_combs)
+    Z = classifier.step_activ(X0X1_combs)
 
     Z = Z.reshape(X0_grid.shape)
 
