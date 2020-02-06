@@ -131,7 +131,7 @@ y = np.where(y == 'Iris-setosa', -1, 1)
 
 # Extract the features
 
-X = data.iloc[:100, [0,2]].to_numpy()
+X = data.iloc[:100, [0, 2]].to_numpy()
 
 
 # Plot the features in a scatter plot
