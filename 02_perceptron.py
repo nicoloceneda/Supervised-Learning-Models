@@ -16,7 +16,7 @@ import matplotlib.colors as clr
 
 
 # -------------------------------------------------------------------------------
-# 1. DESIGN THE PERCEPTRON
+# 1. DESIGN THE PERCEPTRON CLASSIFIER
 # -------------------------------------------------------------------------------
 
 
@@ -28,10 +28,10 @@ class Perceptron:
     ----------
     eta : float
         Learning rate (between 0.0 and 1.0)
-    n_epoch : int
+    n_epochs : int
         Number of epochs.
 
-    Attributed:
+    Attributes:
     ----------
     w : array, shape = [n_features, ]
         Weights after fitting, where n_features is the number of features.
@@ -39,77 +39,77 @@ class Perceptron:
         Number of misclassifications (hence weight updates) in each epoch.
 """
 
-    def __init__(self, eta=0.01, n_epoch=100):
+    def __init__(self, eta=0.01, n_epochs=100):
 
         self.eta = eta
-        self.n_epoch = n_epoch
+        self.n_epochs = n_epochs
 
     def fit(self, X, y):
 
-        """ Fit training data
+        """ Fit training set
 
-            Parameters:
-            ----------
-            X : array, shape = [n_samples, n_features]
-                Training matrix, where n_samples is the number of samples and n_features is the number of features.
-            y : array, shape = [n_samples, ]
-                Target values.
+        Parameters:
+        ----------
+        X : array, shape = [n_samples, n_features]
+            Training matrix, where n_samples is the number of samples and n_features is the number of features.
+        y : array, shape = [n_samples, ]
+            Target values.
 
-            Returns:
-            -------
-            self : object
+        Returns:
+        -------
+        self : object
         """
 
         rgen = np.random.RandomState(seed=1)
         self.w = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1])
         self.n_misclass = []
 
-        for epoch in range(self.n_epoch):
+        for epoch in range(self.n_epochs):
 
             misclass = 0
 
             for Xi, yi in zip(X, y):
 
-                update = self.eta * (yi - self.predict(Xi))
+                update = self.eta * (yi - self.predict(self.net_input(Xi)))
                 self.w[0] += update
                 self.w[1:] += update * Xi
-                misclass += int(update != 0.0)
+                misclass += int(update != 0)
 
             self.n_misclass.append(misclass)
 
         return self
 
-    def net_input(self, X):
+    def net_input(self, Xi):
 
         """ Calculate the net input
 
-            Parameters:
-            ----------
-            X : array, shape = [n_samples, n_features]
-                Training matrix, where n_samples is the number of samples and n_features is the number of features.
+        Parameters:
+        ----------
+        Xi : array, shape = [n_features, ]
+            Training sample, where n_features is the number of features.
 
-            Returns:
-            -------
-            net_input : float
+        Returns:
+        -------
+        net_input : float
         """
 
-        return self.w[0] + np.dot(X, self.w[1:])
+        return self.w[0] + np.dot(Xi, self.w[1:])
 
-    def predict(self, X):
+    def predict(self, z):
 
-        """ Return the class label after unit step function
+        """ Return the class label prediction after the unit step function
 
-            Parameters:
-            ----------
-            X : array, shape = [n_samples, n_features]
-                Training matrix, where n_samples is the number of samples and n_features is the number of features.
+        Parameters:
+        ----------
+        z : float
+            Net input.
 
-            Returns:
-            -------
-            predict : int
+        Returns:
+        -------
+        predict : int
         """
 
-        return np.where(self.net_input(X) >= 0, 1, -1)
+        return np.where(z >= 0, 1, -1)
 
 
 # -------------------------------------------------------------------------------
@@ -153,7 +153,7 @@ plt.savefig('images/02_perceptron/Scatter_plot_of_the_features.png')
 
 # Initialize a perceptron object
 
-ppn = Perceptron(eta=0.1, n_epoch=10)
+ppn = Perceptron(eta=0.1, n_epochs=10)
 
 
 # Learn from the data via the fit method
