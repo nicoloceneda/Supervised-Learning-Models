@@ -1,6 +1,7 @@
-""" ADALINE
-    -------
-    Implementation of a single layer adaptive linear neuron with standardized features via gradient descent algorithm.
+""" ADALINE - GRADIENT DESCENT
+    --------------------------
+    Implementation of a single layer adaptive linear neuron for binary classification, with standardized features via gradient descent algo-
+    rithm.
 """
 
 
@@ -33,8 +34,8 @@ class AdalineGD:
 
         Attributes:
         ----------
-        w : array, shape = [n_features, ]
-            Weights after fitting, where n_features is the number of features.
+        w : array, shape = [n_features+1, ]
+            Weights after fitting.
         cost_fun : list
             Sum of squares cost function value in each epoch.
     """
@@ -51,9 +52,7 @@ class AdalineGD:
             Parameters:
             ----------
             X : array, shape = [n_samples, n_features]
-                Training matrix, where n_samples is the number of samples and n_features is the number of features.
             y : array, shape = [n_samples, ]
-                Target values.
 
             Returns:
             -------

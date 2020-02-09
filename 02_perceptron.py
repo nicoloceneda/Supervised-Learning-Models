@@ -1,6 +1,6 @@
 """ PERCEPTRON
     ----------
-    Implementation of a single layer perceptron.
+    Implementation of a single layer perceptron for binary classification.
 """
 
 
@@ -33,8 +33,8 @@ class Perceptron:
 
         Attributes:
         ----------
-        w : array, shape = [n_features, ]
-            Weights after fitting, where n_features is the number of features.
+        w : array, shape = [n_features+1, ]
+            Weights after fitting.
         n_misclass : list
             Number of misclassifications (hence weight updates) in each epoch.
     """
@@ -51,9 +51,7 @@ class Perceptron:
             Parameters:
             ----------
             X : array, shape = [n_samples, n_features]
-                Training matrix, where n_samples is the number of samples and n_features is the number of features.
             y : array, shape = [n_samples, ]
-                Target values.
 
             Returns:
             -------

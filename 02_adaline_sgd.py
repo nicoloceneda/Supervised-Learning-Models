@@ -1,6 +1,7 @@
-""" adaline_sgd
-    -----------
-    Implementation of a single layer adaptive linear neuron (with standardization) via stochastic gradient descent algorithm.
+""" ADALINE - STOCHASTIC GRADIENT DESCENT
+    -------------------------------------
+    Implementation of a single layer adaptive linear neuron for binary classification, with standardized features via stochastic gradient
+    descent algorithm.
 """
 
 
@@ -20,119 +21,112 @@ import matplotlib.colors as clr
 # ------------------------------------------------------------------------------------------------------------------------------------------
 
 
-class AdalineSGD(object):
+class AdalineSGD:
 
-    """ ADAptive LInear NEuron classifier
+    """ Adaline classifier
 
-    Parameters:
-    -----------
-    eta : float
-        Learning rate (between 0.0 and 1.0).
-    n_iter : int
-        Passes over the training dataset.
-    random_state : int
-        Random number generator seed for random weight initialization.
-    shuffle : bool (default: True)
-        If set to True, it shuffles the training dataset every iter to prevent cycles.
+        Parameters:
+        ----------
+        eta : float
+            Learning rate (between 0.0 and 1.0)
+        n_epochs : int
+            Number of epochs.
+        shuffle : bool
+            If set to True it shuffles the training set before each epoch to prevent cycles.
 
-    Attributes:
-    -----------
-    w : 1d-array
-        Weights after fitting.
-    cost_fun : list
-        Sum of squares cost function value averaged over all training samples in each iter.
+        Attributes:
+        ----------
+        w : array, shape = [n_features+1, ]
+            Weights after fitting.
+        avg_cost_fun : list
+            Sum of squares cost function value averaged over all training samples in each epoch.
     """
 
-    def __init__(self, eta=0.01, n_iter=10, random_state=1, shuffle=True):
+    def __init__(self, eta=0.01, n_epochs=100, shuffle=True):
 
         self.eta = eta
-        self.n_iter = n_iter
-        self.random_state = random_state
+        self.n_epochs = n_epochs
         self.shuffle = shuffle
 
     def fit(self, X, y):
 
-        """ Fit training data
+        """ Fit training set
 
-        Parameters:
-        -----------
-        X : array-like, shape = [n_samples, n_features]
-            Training vectors, where n_samples is the number of samples and n_features is the number of features.
-        Y : array-like shape = [n_samples, ]
-            Target values.
+            Parameters:
+            ----------
+            X : array, shape = [n_samples, n_features]
+            y : array, shape = [n_samples, ]
 
-        Returns:
-        --------
-        self : object
+            Returns:
+            -------
+            self : object
         """
 
-        rgen = np.random.RandomState(self.random_state)
+        rgen = np.random.RandomState(seed=1)
         self.w = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1])
         self.avg_cost_fun = []
 
-        for iteration in range(self.n_iter):
+        for epoch in range(self.n_epochs):
 
             if self.shuffle:
 
-                X, y = self.shuffler(X, y)
+                pos = rgen.permutation(len(y))
+                X, y = X[pos], y[pos]
 
             cost = 0
 
             for Xi, yi in zip(X, y):
 
-                cost += self.update_weights(Xi, yi)
+                update = yi - self.linear_activ(Xi)
+                self.w[0] += self.eta * update
+                self.w[1:] += self.eta * update * Xi
+                cost += 0.5 * (update ** 2)
 
             self.avg_cost_fun.append(cost / len(y))
 
         return self
 
-    def update_weights(self, Xi, yi):
+    def linear_activ(self, Xi):
 
-        """ Apply Adaline learning rule to update weights. """
+        """ Calculate and return the net input
+        (Used in fit method)
 
-        update = yi - self.activation(self.net_input(Xi))
-        self.w[0] += self.eta * update
-        self.w[1:] += self.eta * np.dot(Xi, update)
-        cost = 0.5 * (update ** 2)
+        Parameters:
+        ----------
+        Xi : array, shape = [n_features, ]
 
-        return cost
+        Returns:
+        -------
+        net_input : int
+        """
 
-    def shuffler(self, X, y):
-
-        """ Shuffle training data. """
-
-        rgen = np.random.RandomState(self.random_state)
-        pos = rgen.permutation(len(y))
-
-        return X[pos], y[pos]
-
-    def net_input(self, Xi):
-
-        net_input = np.dot(Xi, self.w[1:].T) + self.w[0]
+        net_input = self.w[0] + np.dot(Xi, self.w[1:])
 
         return net_input
 
-    def activation(self, z):
+    def step_activ(self, X):
 
-        """ Return the linear activation """
+        """ Calculate the net input and return the class label prediction after the unit step function
+            (Used in plot_decision_regions function)
 
-        return z
+            Parameters:
+            ----------
+            array, shape = [X0X1_combs.shape[0], n_features]
 
-    def predict(self, X):
+            Returns:
+            -------
+            step_activ : array, shape = [X0X1_combs.shape[0], ]
+        """
 
-        """ Return class label after unit step. """
+        net_input = self.w[0] + np.dot(X, self.w[1:])
 
-        prediction = np.where(self.activation(self.net_input(X)) >= 0.0, 1, -1)
-
-        return prediction
+        return np.where(net_input >= 0, 1, -1)
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # 2. PREPARE THE DATA
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-
-# Import the data
 
 data = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data', header=None)
 print(data.head())
@@ -140,13 +134,13 @@ print(data.head())
 
 # Extract the class labels
 
-y = data.iloc[0:100, 4].to_numpy()
-y = np.where(y == "Iris-setosa", -1, 1)
+y = data.iloc[:100, 4].to_numpy()
+y = np.where(y == 'Iris-setosa', -1, 1)
 
 
-# Extract the features
+# Extract features
 
-X = data.iloc[0:100, [0, 2]].to_numpy()
+X = data.iloc[:100, [0, 2]].to_numpy()
 
 
 # Apply the standardization to scale the features (it can be verified that the adaline does not converge without standardization)
@@ -157,8 +151,8 @@ X_std = (X - np.mean(X, axis=0)) / np.std(X, axis=0)
 # Plot the features in a scatter plot
 
 plt.figure()
-plt.scatter(X_std[:50, 0], X_std[:50, 1], color="red", marker="o", label="Setosa")
-plt.scatter(X_std[50:100, 0], X_std[50:100, 1], color="blue", marker="x", label="Versicolor")
+plt.scatter(X_std[:50, 0], X_std[:50, 1], color="red", marker="+", label="Setosa")
+plt.scatter(X_std[50:, 0], X_std[50:, 1], color="blue", marker="+", label="Versicolor")
 plt.title("Scatter plot of the scaled features")
 plt.xlabel("Sepal length [standardized]")
 plt.ylabel("Petal length [standardized]")
@@ -166,17 +160,17 @@ plt.legend(loc="upper left")
 plt.savefig('images/02_adaline_sgd/Scatter_plot_of_the_scaled_features.png')
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # 3. TRAIN THE ADALINE
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
-# Initialize the adaline object
+# Initialize an adaline object
 
-ada = AdalineSGD(eta=0.01, n_iter=15)
+ada = AdalineSGD(eta=0.01, n_epochs=15)
 
 
-# Learn from the data via the fit method (the activation method, rather than predict method, is called in the fit method to learn the weights)
+# Learn from the data via the fit method
 
 ada.fit(X_std, y)
 
@@ -184,38 +178,39 @@ ada.fit(X_std, y)
 # Plot the cost function per iter
 
 plt.figure()
-plt.plot(range(1, len(ada.avg_cost_fun) + 1), ada.avg_cost_fun, marker="o")
-plt.title("AdalineSGD with standard")
-plt.xlabel("iters")
-plt.ylabel("Average Sum of squared errors")
-plt.savefig('images/02_adaline_sgd/AdalineSGD_with_standard.png')
+plt.plot(range(1, len(ada.avg_cost_fun) + 1), ada.avg_cost_fun, marker='o')
+plt.title('AdalineSGD with standardization')
+plt.xlabel("Epoch")
+plt.ylabel('Sum of squared errors')
+plt.savefig('images/02_adaline_sgd/AdalineSGD_with_standardization.png')
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
-# 4. VISUALIZE THE DECISION BOUNDARIES AND VERIFY THAT THE TRAINING SAMPLE IS CLASSIFIED CORRECTLY
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+# 4. PLOT THE DECISION BOUNDARY AND VERIFY THAT THE TRAINING SAMPLE IS CLASSIFIED CORRECTLY
+# -------------------------------------------------------------------------------
 
 
-# Function to visualize the decision boundaries
+# Function to plot the decision boundary
 
 def plot_decision_regions(X, y, classifier, resolution=0.02):
 
-    """ Create a colormap.
+    """ Create a colormap object.
 
         Generate a matrix with two columns, where rows are all possible combinations of all numbers from min-1 to max+1 of the two series of
-        features. The matrix with two columns is needed because the adaline was trained on a matrix with such shape.
+        features. The matrix with two columns is needed because the adaline was trained on a matrix with such shape. This is used as the test
+        set.
 
-        Use the predict method of the chosen classifier (ada) to predict the class corresponding to all the possible combinations of features
-        generated in the above matrix. The predict method will use the weights learnt during the training phase: since the number of mis-
-        classifications converged (even though to a non-zero value) in the training phase, we expect the perceptron to correctly classify all
-        possible combinations of features.
+        Use the step_activ method of the chosen classifier (ada) to predict the class corresponding to all the possible combinations of fea-
+        tures generated in the above matrix. The step_activ method will use the weights learnt during the training phase: since the number of
+        misclassifications converged during the training phase, we expect the adaline to find a decision boundary that correctly classifies
+        all the samples in the training set.
 
         Reshape the vector of predictions as the X0_grid.
 
         Draw filled contours, where all possible combinations of features are associated to a Z, which is +1 or -1.
 
-        To verify that the adaline correctly classified all possible combinations of the features, plot the the original features in the
-        scatter plot and verify that they fall inside the correct region.
+        To verify that the adaline correctly classified all possible combinations of the features, plot the the original features in the sc-
+        atter plot and verify that they fall inside the correct region.
     """
 
     colors = ('red', 'blue', 'green')
@@ -226,7 +221,7 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
     X0_grid, X1_grid = np.meshgrid(np.arange(X0_min, X0_max, resolution), np.arange(X1_min, X1_max, resolution))
     X0X1_combs = np.array([X0_grid.ravel(), X1_grid.ravel()]).T
 
-    Z = classifier.predict(X0X1_combs)
+    Z = classifier.step_activ(X0X1_combs)
 
     Z = Z.reshape(X0_grid.shape)
 
@@ -247,12 +242,12 @@ plt.title('Decision boundary and training sample')
 plt.xlabel('Sepal length [standardized]')
 plt.ylabel('Petal length [standardized]')
 plt.legend(loc='upper left')
-plt.savefig('images/02_adaline_sgd/Decision_02boundary_and_training_sample.png')
+plt.savefig('images/02_adaline_sgd/Decision_boundary_and_training_sample.png')
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # 5. GENERAL
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 # Show plots
