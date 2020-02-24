@@ -169,20 +169,19 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
     """ Create a colormap object.
 
         Generate a matrix with two columns, where rows are all possible combinations of all numbers from min-1 to max+1 of the two series of
-        features. The matrix with two columns is needed because the perceptron was trained on a matrix with such shape. This is used as the
-        test set.
+        features. The matrix with two columns is needed because the perceptron was trained on a matrix with such shape.
 
-        Use the step_activ method of the chosen classifier (ppn) to predict the class corresponding to all the possible combinations of fea-
-        tures generated in the above matrix. The step_activ method will use the weights learnt during the training phase: since the number of
-        misclassifications converged during the training phase, we expect the perceptron to find a decision boundary that correctly classifies
-        all the samples in the training set.
+        Use the step_activ method of the ppn to predict the class corresponding to all the possible combinations of features generated in the
+        above matrix. The step_activ method will use the weights learnt during the training phase: since the number of misclassifications con-
+        verged during the training phase, we expect the perceptron to find a decision boundary that correctly classifies all the samples in
+        the training set.
 
         Reshape the vector of predictions as the X0_grid.
 
         Draw filled contours, where all possible combinations of features are associated to a Z, which is +1 or -1.
 
-        To verify that the perceptron correctly classified all possible combinations of the features, plot the the original features in the
-        scatter plot and verify that they fall inside the correct region.
+        To verify that the perceptron correctly classified all the samples in the training set, plot the the original features in the scatter
+        plot and verify that they fall inside the correct region.
     """
 
     colors = ('red', 'blue', 'green')
