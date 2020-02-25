@@ -180,7 +180,7 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
 
         Draw filled contours, where all possible combinations of features are associated to a Z, which is +1 or -1.
 
-        To verify that the perceptron correctly classified all the samples in the training set, plot the the original features in the scatter
+        To verify that the perceptron correctly classified all the samples in the training set, plot the original features in the scatter
         plot and verify that they fall inside the correct region.
     """
 
