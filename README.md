@@ -7,18 +7,19 @@
 *Course*: Master of Banking and Finance \
 *Last update*: 25 February 2020
 
-## Project Structure
+## Content of the Scripts:
 <pre>
 │
-├── 02_perceptron.py                       <-- Implementation of a single layer perceptron for binary classification.
+├── 02_perceptron.py                       <-- Implementation of a single layer perceptron for bin-
+│                                              ary classification.
 │
-├── 02_adaline_gd.py                       <-- Implementation of a single layer adaptive linear 
-│                                              neuron (with standardization) via gradient descent 
-│                                              algorithm.
+├── 02_adaline_gd.py                       <-- Implementation of a single layer adaptive linear ne-
+│                                              uron for binary classification, via gradient descent 
+│                                              algorithm, with standardized features.
 │
-├── 02_adaline_sgd.py                      <-- Implementation of a single layer adaptive linear 
-│                                              neuron (with standardization) via stochastic 
-│                                              gradient descent algorithm.       
+├── 02_adaline_sgd.py                      <-- Implementation of a single layer adaptive linear ne-
+│                                              uron for binary classification, via stochastic grad-
+│                                              ient descent algorithm, with standardized features.      
 │
 ├── 03_perceptron_sl.py                    <-- Implementation of a single layer perceptron via sci-
 │                                              kit learn.
