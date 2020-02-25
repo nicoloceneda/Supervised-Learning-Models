@@ -5,12 +5,12 @@
 *Website*: [www.nicoloceneda.com](http://www.nicoloceneda.com) \
 *Institution*: University of St Gallen \
 *Course*: Master of Banking and Finance \
-*Last update*: 7 February 2020
+*Last update*: 25 February 2020
 
 ## Project Structure
 <pre>
 │
-├── 02_perceptron.py                       <-- Implementation of a single layer perceptron
+├── 02_perceptron.py                       <-- Implementation of a single layer perceptron for binary classification.
 │
 ├── 02_adaline_gd.py                       <-- Implementation of a single layer adaptive linear 
 │                                              neuron (with standardization) via gradient descent 
