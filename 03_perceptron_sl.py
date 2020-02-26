@@ -12,7 +12,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as clr
-from sklearn import datasets, model_selection, preprocessing, linear_model
+from sklearn import datasets, model_selection, preprocessing, linear_model, metrics
 
 
 # -------------------------------------------------------------------------------
@@ -48,19 +48,6 @@ X_train_std = std_scaler.transform(X_train)
 X_test_std = std_scaler.transform(X_test)
 
 
-# Plot the features in a scatter plot
-
-plt.figure()
-plt.scatter(X[:50, 0], X[:50, 1], color='red', marker='+', label='Setosa')
-plt.scatter(X[50:100, 0], X[50:100, 1], color='blue', marker='+', label='Versicolor')
-plt.scatter(X[100:, 0], X[100:, 1], color='lightgreen', marker='+', label='Virginica')
-plt.title('Scatter plot of the features')
-plt.xlabel('Petal length [cm]')
-plt.ylabel('Petal width [cm]')
-plt.legend(loc='upper left')
-plt.savefig('images/03_perceptron_sl/Scatter_plot_of_the_features.png')
-
-
 # -------------------------------------------------------------------------------
 # 2. TRAIN THE PERCEPTRON
 # -------------------------------------------------------------------------------
@@ -77,12 +64,89 @@ ppn.fit(X_train_std, y_train)
 
 
 # -------------------------------------------------------------------------------
-# 5. MAKE PREDICTIONS
+# 3. MAKE PREDICTIONS
 # -------------------------------------------------------------------------------
 
 
-y_pred = ppn.predict(X_test_std)
-print('Number of misclassification: {}'.format(np.sum(y_test != y_pred)))
+# Predict the classes of the samples in the test set
+
+y_predict = ppn.predict(X_test_std)
+
+
+# Evaluate the performance of the model
+
+n_misclass = np.sum(y_test != y_predict)
+print('Number of misclassifications: {}'.format(n_misclass))
+print('Prediction accuracy: {}'.format(metrics.accuracy_score(y_test, y_predict)))
+
+
+# -------------------------------------------------------------------------------
+# 4. PLOT THE DECISION BOUNDARY AND VERIFY THAT THE TRAINING SAMPLE IS CLASSIFIED CORRECTLY
+# -------------------------------------------------------------------------------
+
+
+# Function to plot the decision boundary
+
+def plot_decision_regions(X, y, classifier, resolution=0.02, test_idx=None):
+
+    """ Create a colormap object.
+
+        Generate a matrix with two columns, where rows are all possible combinations of all numbers from min-1 to max+1 of the two series of
+        features. The matrix with two columns is needed because the perceptron was trained on a matrix with such shape.
+
+        Use the predict method of the ppn to predict the class corresponding to all the possible combinations of features generated in the
+        above matrix. The predict method will use the weights learnt during the training phase: since the number of misclassifications conv-
+        erged during the training phase, we expect the perceptron to find a decision boundary that correctly classifies all the samples in
+        the training and test sets.
+
+        Reshape the vector of predictions as the X0_grid.
+
+        Draw filled contours, where all possible combinations of features are associated to a Z, which is 0, 1 or 2.
+
+        To verify that the perceptron correctly classified all the samples in the training and test sets, plot the original features in the
+        scatter plot and verify that they fall inside the correct region.
+
+        Circle the sample belonging to the test set with a square.
+    """
+
+    colors = ('red', 'blue', 'green')
+    cmap = clr.ListedColormap(colors[:len(np.unique(y))])
+
+    X0_min, X0_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+    X1_min, X1_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    X0_grid, X1_grid = np.meshgrid(np.arange(X0_min, X0_max, resolution), np.arange(X1_min, X1_max, resolution))
+    X0X1_combs = np.array([X0_grid.ravel(), X1_grid.ravel()]).T
+
+    Z = classifier.predict(X0X1_combs)
+
+    Z = Z.reshape(X0_grid.shape)
+
+    plt.figure()
+    plt.contourf(X0_grid, X1_grid, Z, alpha=0.3, cmap=cmap)
+    plt.xlim(X0_min, X0_max)
+    plt.ylim(X1_min, X1_max)
+
+    for pos, cl in enumerate(np.unique(y)):
+
+        plt.scatter(x=X[y == cl, 0], y=X[y == cl, 1], alpha=0.8, color=colors[pos], marker='+', label=cl)
+
+    if test_idx:
+
+        X_test, y_test = X[test_idx, :], y[test_idx]
+        plt.scatter(X_test[:, 0], X_test[:, 1], alpha=0.8, linewidth=1, color='', marker='s', edgecolor='black', label='test_set')
+
+
+# Plot the decision region and the data
+
+X_combined_std = np.vstack((X_train_std, X_test_std))
+y_combined = np.hstack((y_train, y_test))
+
+plot_decision_regions(X=X_combined_std, y=y_combined, classifier=ppn, test_idx=range(105, 150))
+plt.title('Decision boundary and training sample')
+plt.xlabel('Petal length [standardized]')
+plt.ylabel('Petal width [standardized]')
+plt.legend(loc='upper left')
+plt.savefig('images/03_perceptron_sl/Decision_boundary_and_training_sample.png')
 
 
 # -------------------------------------------------------------------------------
