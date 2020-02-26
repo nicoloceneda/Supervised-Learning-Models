@@ -21,8 +21,8 @@
 │                                              uron for binary classification, via stochastic grad-
 │                                              ient descent algorithm, with standardized features.      
 │
-├── 03_perceptron_sl.py                    <-- Implementation of a single layer perceptron via sci-
-│                                              kit learn.
+├── 03_perceptron_sl.py                    <-- Implementation of a single layer perceptron for mul-
+│                                              ti-class classification via scikit-learn.
 │
 ├── 03_logistic_regression_gd.py           <-- Implementation of a single layer logistic regression 
 │                                              via gradient descent algorithm.                       
