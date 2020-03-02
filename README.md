@@ -29,7 +29,7 @@
 │                                              orithm, with standardized features.                      
 │
 ├── 03_logistic_regression_gd_sl.py        <-- Implementation of a single layer logistic regression 
-for multi-class classification, via gradient descent algorithm, with standardized
+                                               for multi-class classification, via gradient descent algorithm, with standardized
     features, using scikit-learn.
 │
 ├── 03_support_vector_machine_sl.py        <-- Implementation of a support vector machine via sci- 
