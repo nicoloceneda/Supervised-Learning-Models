@@ -132,7 +132,7 @@ y = np.where(y == 'Iris-setosa', -1, 1)
 X = data.iloc[:100, [0, 2]].to_numpy()
 
 
-# Apply the standardization to scale the features (it can be verified that the adaline does not converge without standardization)
+# Apply the standardization to scale the features
 
 X_std = (X - np.mean(X, axis=0)) / np.std(X, axis=0)
 
