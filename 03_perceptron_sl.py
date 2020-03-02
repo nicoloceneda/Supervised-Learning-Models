@@ -1,4 +1,4 @@
-""" PERCEPTRON - SCIKIT-LEARN
+""" PERCEPTRON - SCIKIT LEARN
     -------------------------
     Implementation of a single layer perceptron for multi-class classification via scikit-learn.
 """
