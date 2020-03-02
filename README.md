@@ -28,8 +28,7 @@
 │                                              for binary classification, via gradient descent alg-
 │                                              orithm, with standardized features.                      
 │
-├── 03_logistic_regression_gd_sl.py        <-- Implementation of a single layer logistic regression 
-│                                              via gradient descent algorithm via sci-kit learn.
+├── 03_logistic_regression_gd_sl.py        <--  
 │
 ├── 03_support_vector_machine_sl.py        <-- Implementation of a support vector machine via sci- 
 │                                              kit learn.
