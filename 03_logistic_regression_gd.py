@@ -1,196 +1,204 @@
-""" logistic_regression_gd
-    ----------------------
-    Implementation of a single layer logistic regression via gradient descent algorithm.
+""" LOGISTIC REGRESSION - GRADIENT DESCENT
+    --------------------------------------
+    Implementation of a single layer logistic regression for binary classification, via gradient descent algorithm, with standardized
+    features.
 """
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
-# 0. IMPORT LIBRARIES AND/OR MODULES
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+# 0. IMPORT LIBRARIES
+# -------------------------------------------------------------------------------
 
 
 import numpy as np
-
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
-
+import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.colors as clr
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
-# 1. DESIGN THE ADALINE
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+# 1. DESIGN THE ADALINE CLASSIFIER
+# -------------------------------------------------------------------------------
 
 
-class LogisticRegressionGD(object):
+class LogisticRegressionGD:
 
-    """ Logistic Regression Classifier using gradient descent
+    """ Logistic regression classifier
 
-    Parameters:
-    -----------
-    eta : float
-        Learning rate (between 0.0 and 1.0).
-    n_iter : int
-        Passes over the training dataset.
-    random_state : int
-        Random number generator seed for random weight initialization.
+        Parameters:
+        ----------
+        eta : float
+            Learning rate (between 0.0 and 1.0)
+        n_epochs : int
+            Number of epochs.
 
-    Attributes:
-    -----------
-    w : 1d-array
-        Weights after fitting.
-    cost_fun : list
-        Logistic cost function value in each epoch.
+        Attributes:
+        ----------
+        w : array, shape = [n_features+1, ]
+            Weights after fitting.
+        cost_fun : list
+            Logistic cost function value in each epoch.
     """
 
-    def __init__(self, eta=0.05, n_iter=100, random_state=1):
+    def __init__(self, eta=0.01, n_epochs=100):
 
         self.eta = eta
-        self.n_iter = n_iter
-        self.random_state = random_state
+        self.n_epochs = n_epochs
 
     def fit(self, X, y):
 
-        """ Fit training data
+        """ Fit training set
 
-        Parameters:
-        -----------
-        X : array-like, shape = [n_samples, n_features]
-            Training matrix, where n_samples is the number of samples and n_features is the number of features.
-        y : array-like, shape = [n_samples, ]
-            Target values.
+            Parameters:
+            ----------
+            X : array, shape = [n_samples, n_features]
+            y : array, shape = [n_samples, ]
 
-        Returns:
-        --------
-        self : object
+            Returns:
+            --------
+            self : object
         """
 
-        rgen = np.random.RandomState(self.random_state)
+        rgen = np.random.RandomState(seed=1)
         self.w = rgen.normal(loc=0.0, scale=0.01, size=1 + X.shape[1])
         self.cost_fun = []
 
-        for iteration in range(self.n_iter):
+        for epoch in range(self.n_epochs):
 
-            update = y - (self.activation(self.net_input(X)))
+            phi_z = self.sigmoid_activ(X)
+            update = y - phi_z
             self.w[0] += self.eta * np.sum(update)
             self.w[1:] += self.eta * np.dot(X.T, update)
-            cost = -y.dot(np.log(self.activation(self.net_input(X)))) - ((1 - y).dot(np.log(1 - self.activation(self.net_input(X)))))
+            cost = -np.dot(y, np.log(phi_z)) - np.dot((1 - y), (1 - phi_z))
             self.cost_fun.append(cost)
 
         return self
 
-    def net_input(self, X):
+    def sigmoid_activ(self, X):
 
-        """ Return the net input """
+        """ Calculate the net input and return the probability level after the logistic sigmoid function
+            (Used in the fit method)
 
-        net_input = np.dot(X, self.w[1:]) + self.w[0]
+            Parameters:
+            ----------
+            X : array, shape = [n_samples, n_features]
 
-        return net_input
+            Returns:
+            --------
+            sigmoid_activ : array, shape = [n_samples, ]
+        """
 
-    def activation(self, z):
+        net_input = self.w[0] + np.dot(X, self.w[1:])
 
-        """ Return the logistic sigmoid actiavtion """
+        return 1 / (1 + np.exp(-np.clip(net_input, -250, 250)))
 
-        return 1. / (1. + np.exp(-np.clip(z, -250, 250)))
+    def step_activ(self, X):
 
-    def predict(self, X):
+        """ Calculate the net input and return the class label prediction after the unit step function
+            (Used in plot decision region function)
 
-        """ Return the class label after unit step function """
+            Parameters:
+            ----------
+            array, shape = [X0X1_combs.shape[0], ]
 
-        prediction = np.where(self.net_input(X) >= 0.0, 1, 0)
+            Returns:
+            -------
+            step_activ : array, shape = [X0X1_combs.shape[0], ]
+        """
 
-        return prediction
+        net_input = self.w[0] + np.dot(X, self.w[1:])
+
+        return np.where(net_input >= 0, 1, 0)
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # 2. PREPARE THE DATA
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 # Import the dataset
 
-iris = load_iris()
-print(iris)
+data = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data', header=None)
+print(data.head())
 
 
 # Extract the class labels
 
-y = iris.target[:100]
+y = data.iloc[:100, 4].to_numpy()
+y = np.where(y == 'Iris-setosa', 0, 1)
 
 
 # Extract the features
 
-X = iris.data[:100, [2, 3]]
+X = data.iloc[:100, [0, 2]].to_numpy()
+
+
+# Apply the standardization to scale the features
+
+X_std = (X - np.mean(X, axis=0)) / np.std(X, axis=0)
 
 
 # Plot the features in a scatter plot
 
 plt.figure()
-plt.scatter(X[:50, 0], X[:50, 1], color="red", edgecolor='black', marker="+", label="Setosa")
-plt.scatter(X[50:100, 0], X[50:100, 1], color="blue", edgecolor='black', marker="+", label="Versicolor")
-plt.title("Scatter plot of the features")
-plt.xlabel("Petal length [cm]")
-plt.ylabel("Petal width [cm]")
+plt.scatter(X_std[:50, 0], X_std[:50, 1], color="red", marker="+", label="Setosa")
+plt.scatter(X_std[50:, 0], X_std[50:, 1], color="blue", marker="+", label="Versicolor")
+plt.title("Scatter plot of the scaled features")
+plt.xlabel("Sepal length [standardized]")
+plt.ylabel("Petal length [standardized]")
 plt.legend(loc="upper left")
-plt.savefig('images/03_logistic_regression_gd/Scatter_plot_of_the_features.png')
+plt.savefig('images/02_adaline_gd/Scatter_plot_of_the_scaled_features.png')
 
 
-# Separate the data into a train and a test subset with the same proportions of class labels as the input dataset
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1, stratify=y)
-
-
-# ------------------------------------------------------------------------------------------------------------------------------------------
-# 3. TRAIN THE ADALINE
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+# 3. TRAIN THE LOGISTIC REGRESSION
+# -------------------------------------------------------------------------------
 
 
-# Initialize the adaline object
+# Initialize a logistic regression object
 
-lrgd = LogisticRegressionGD(eta=0.05, n_iter=30)
+logreg = LogisticRegressionGD(eta=0.05, n_epochs=1000)
 
 
-# Learn from the data via the fit method (the activation method, rather than predict method, is called in the fit method to learn the weights)
+# Learn from the data via the fit method
 
-lrgd.fit(X_train, y_train)
+logreg.fit(X_std, y)
 
 
 # Plot the cost function per iter
 
 plt.figure()
-plt.plot(range(1, len(lrgd.cost_fun) + 1), lrgd.cost_fun, marker="o")
-plt.title("LogisticRegressionGD")
-plt.xlabel("n_iter")
-plt.ylabel("Logistic cost function")
-plt.savefig('images/03_logistic_regression_gd/AdalineGD_with_standardization.png')
+plt.plot(range(1, len(logreg.cost_fun) + 1), logreg.cost_fun, marker='o')
+plt.title('LogisticRegressionGD with standardization')
+plt.xlabel("Epoch")
+plt.ylabel('Cost function')
+plt.savefig('images/03_logistic_regression_gd/LogisticRegressionGD_with_standardization.png')
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
-# 4. VISUALIZE THE DECISION BOUNDARIES AND VERIFY THAT THE TRAINING SAMPLE IS CLASSIFIED CORRECTLY
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+# 4. PLOT THE DECISION BOUNDARY AND VERIFY THAT THE TRAINING SAMPLE IS CLASSIFIED CORRECTLY
+# -------------------------------------------------------------------------------
 
-
-# Function to visualize the decision boundaries
+# Function to plot the decision boundary
 
 def plot_decision_regions(X, y, classifier, resolution=0.02):
 
-    """ Create a colormap.
+    """ Create a colormap object.
 
         Generate a matrix with two columns, where rows are all possible combinations of all numbers from min-1 to max+1 of the two series of
-        features. The matrix with two columns is needed because the adaline was trained on a matrix with such shape.
+        features. The matrix with two columns is needed because the logistic regression was trained on a matrix with such shape.
 
-        Use the predict method of the chosen classifier (ada) to predict the class corresponding to all the possible combinations of features
-        generated in the above matrix. The predict method will use the weights learnt during the training phase: since the number of mis-
-        classifications converged (even though to a non-zero value) in the training phase, we expect the perceptron to correctly classify all
-        possible combinations of features.
+        Use the step_activ method of the logreg to predict the class corresponding to all the possible combinations of features generated in
+        the above matrix. The step_activ method will use the weights learnt during the training phase: since the cost function converged du-
+        ring the training phase, we expect the logreg to find a decision boundary that correctly classifies all the samples in the training
+        set.
 
         Reshape the vector of predictions as the X0_grid.
 
-        Draw filled contours, where all possible combinations of features are associated to a Z, which is +1 or -1.
+        Draw filled contours, where all possible combinations of features are associated to a Z, which is 1 or 0.
 
-        To verify that the adaline correctly classified all possible combinations of the features, plot the the original features in the
-        scatter plot and verify that they fall inside the correct region.
+        To verify that the adaline correctly classified all the samples in the training set, plot the the original features in the scatter
+        plot and verify that they fall inside the correct region.
     """
 
     colors = ('red', 'blue', 'green')
@@ -201,7 +209,7 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
     X0_grid, X1_grid = np.meshgrid(np.arange(X0_min, X0_max, resolution), np.arange(X1_min, X1_max, resolution))
     X0X1_combs = np.array([X0_grid.ravel(), X1_grid.ravel()]).T
 
-    Z = classifier.predict(X0X1_combs)
+    Z = classifier.step_activ(X0X1_combs)
 
     Z = Z.reshape(X0_grid.shape)
 
@@ -217,21 +225,19 @@ def plot_decision_regions(X, y, classifier, resolution=0.02):
 
 # Plot the decision region and the data
 
-plot_decision_regions(X_train, y_train, classifier=lrgd)
+plot_decision_regions(X_std, y, classifier=logreg)
 plt.title('Decision boundary and training sample')
-plt.xlabel('Petal length')
-plt.ylabel('Petal width')
+plt.xlabel('Sepal length [standardized]')
+plt.ylabel('Petal length [standardized]')
 plt.legend(loc='upper left')
 plt.savefig('images/03_logistic_regression_gd/Decision_boundary_and_training_sample.png')
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # 5. GENERAL
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 # Show plots
 
 plt.show()
-
-
