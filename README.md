@@ -24,8 +24,9 @@
 ├── 03_perceptron_sl.py                    <-- Implementation of a single layer perceptron for mul-
 │                                              ti-class classification via scikit-learn.
 │
-├── 03_logistic_regression_gd.py           <-- Implementation of a single layer logistic regression 
-│                                              via gradient descent algorithm.                       
+├── 03_logistic_regression_gd.py           <-- Implementation of a single layer logistic regression
+│                                              for binary classification, via gradient descent alg-
+│                                              orithm, with standardized features.                      
 │
 ├── 03_logistic_regression_gd_sl.py        <-- Implementation of a single layer logistic regression 
 │                                              via gradient descent algorithm via sci-kit learn.
