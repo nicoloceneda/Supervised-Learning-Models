@@ -1,131 +1,112 @@
-""" logistic_regression_gd_sl
-    -------------------------
-    Implementation of a single layer logistic regression via gradient descent algorithm via sci-kit learn.
+""" LOGISTIC REGRESSION - GRADIENT DESCENT - SCIKIT LEARN
+    -----------------------------------------------------
+    Implementation of a single layer logistic regression for multi-class classification, via gradient descent algorithm, with standardized
+    features, using scikit-learn.
 """
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
-# 0. IMPORT LIBRARIES AND/OR MODULES
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+# 0. IMPORT LIBRARIES
+# -------------------------------------------------------------------------------
 
 
 import numpy as np
-
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
-
 import matplotlib.pyplot as plt
 import matplotlib.colors as clr
+from sklearn import datasets, model_selection, preprocessing, linear_model, metrics
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # 1. PREPARE THE DATA
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 # Import the dataset
 
-iris = load_iris()
-print(iris)
+data = datasets.load_iris()
 
 
 # Extract the class labels
 
-y = iris.target
+y = data.target
 
 
-# Extract the features
+# Import the features
 
-X = iris.data[:, [2, 3]]
-
-
-# Plot the features in a scatter plot
-
-plt.figure()
-plt.scatter(X[:50, 0], X[:50, 1], color="red", edgecolor='black', marker="+", label="Setosa")
-plt.scatter(X[50:100, 0], X[50:100, 1], color="blue", edgecolor='black', marker="+", label="Versicolor")
-plt.scatter(X[100:150, 0], X[100:150, 1], color="lightgreen", edgecolor='black', marker="+", label="Virginica")
-plt.title("Scatter plot of the features")
-plt.xlabel("Petal length [cm]")
-plt.ylabel("Petal width [cm]")
-plt.legend(loc="upper left")
-plt.savefig('images/03_logistic_regression_gd_sl/Scatter_plot_of_the_features.png')
+X = data.data[:, [2, 3]]
 
 
-# Separate the data into a train and a test subset with the same proportions of class labels as the input dataset
+# Separate the data into train and test subsets with the same proportions of class labels as the input dataset
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1, stratify=y)
-
-
-# Apply the standardization to scale the features (note that the same scaling parameters are used to standardize the test set)
-
-sc = StandardScaler()
-sc.fit(X_train)
-X_train_std = sc.transform(X_train)
-X_test_std = sc.transform(X_test)
+X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.3, random_state=1, stratify=y)
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# Apply the standardization to scale the features
+
+std_scaler = preprocessing.StandardScaler()
+std_scaler.fit(X_train)
+X_train_std = std_scaler.transform(X_train)
+X_test_std = std_scaler.transform(X_test)
+
+
+# -------------------------------------------------------------------------------
 # 2. TRAIN THE LOGISTIC REGRESSION
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
-# Initialize a perceptron object
+# Initialize a logistic regression object
 
-lr = LogisticRegression(C=100, random_state=1)
-
-
-# Learn from data via the fit method
-
-lr.fit(X_train_std, y_train)
+logreg = linear_model.LogisticRegression(C=100.0, random_state=1, solver='lbfgs', multi_class='ovr')
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
-# 2. MAKE PREDICTIONS
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# Learn from the data via the fit method
+
+logreg.fit(X_train_std, y_train)
 
 
-# Predict the classes of the features in the test set
-
-y_pred = lr.predict(X_test_std)
-
-
-# Calculate the number of misclassifications
-
-n_miscl = (y_test != y_pred).sum()
-print('Misclassified samples: {}'.format(n_miscl))
+# -------------------------------------------------------------------------------
+# 3. MAKE PREDICTIONS
+# -------------------------------------------------------------------------------
 
 
-# Calculate the classification accuracy
+# Predict the classes of the samples in the test set
 
-print('Accuracy: {}'.format(accuracy_score(y_test, y_pred)))
-print('Accuracy: {}'.format(lr.score(X_test_std, y_test)))
-
-
-# ------------------------------------------------------------------------------------------------------------------------------------------
-# 3. VISUALIZE THE DECISION BOUNDARIES AND VERIFY HOW WELL THE LOGISTIC REGRESSION CLASSIFIES THE DIFFERENT SAMPLES
-# ------------------------------------------------------------------------------------------------------------------------------------------
+y_predict = logreg.predict(X_test_std)
 
 
-def plot_decision_regions(X, y, classifier, test_idx=None, resolution=0.02):
+# Evaluate the performance of the model
 
-    """ Create a colormap.
+print('Number of misclassifications: {}'.format(np.sum(y_test != y_predict)))
+print('Prediction accuracy: {}'.format(metrics.accuracy_score(y_test, y_predict)))
+
+
+# -------------------------------------------------------------------------------
+# 4. PLOT THE DECISION BOUNDARY AND VERIFY THAT THE TRAINING SAMPLE IS CLASSIFIED CORRECTLY
+# -------------------------------------------------------------------------------
+
+
+# Function to plot the decision boundary
+
+def plot_decision_regions(X, y, classifier, resolution=0.02, test_idx=None):
+
+    """ Create a colormap object.
 
         Generate a matrix with two columns, where rows are all possible combinations of all numbers from min-1 to max+1 of the two series of
-        features. The matrix with two columns is needed because the perceptron was trained on a matrix with such shape.
+        features. The matrix with two columns is needed because the logistic regression was trained on a matrix with such shape.
 
-        Use the predict method of the chosen classifier (lr) to predict the class corresponding to all the possible combinations of features
-        generated in the above matrix. The predict method will use the weights learnt during the training phase.
+        Use the predict method of the logreg to predict the class corresponding to all the possible combinations of features generated in the
+        above matrix. The predict method will use the weights learnt during the training phase: since the cost function converged during the
+        training phase, we expect the logreg to find a decision boundary that correctly classifies all the samples in the training and test
+        sets.
 
         Reshape the vector of predictions as the X0_grid.
 
-        Draw filled contours, where all possible combinations of features are associated to a Z, which is +1 or -1.
+        Draw filled contours, where all possible combinations of features are associated to a Z, which is 1 or 0.
 
-        To verify whether the perceptron correctly classified all possible combinations of the features, plot the the original features in the
-        scatter plot and verify that they fall inside the correct region.
+        To verify that the adaline correctly classified all the samples in the training set, plot the the original features in the scatter
+        plot and verify that they fall inside the correct region.
+
+        Circle the sample belonging to the test set with a square.
     """
 
     colors = ('red', 'blue', 'green')
@@ -150,14 +131,15 @@ def plot_decision_regions(X, y, classifier, test_idx=None, resolution=0.02):
 
     if test_idx:
         X_test, y_test = X[test_idx, :], y[test_idx]
-        plt.scatter(X_test[:, 0], X_test[:, 1], alpha=1.0, linewidth=1, color='', marker='s', edgecolor='black', label='test_set')
+        plt.scatter(X_test[:, 0], X_test[:, 1], alpha=0.8, linewidth=1, color='', marker='s', edgecolor='black', label='test_set')
 
 
 # Plot the decision region and the data
 
 X_combined_std = np.vstack((X_train_std, X_test_std))
 y_combined = np.hstack((y_train, y_test))
-plot_decision_regions(X=X_combined_std, y=y_combined, classifier=lr, test_idx=range(105, 150))
+
+plot_decision_regions(X=X_combined_std, y=y_combined, classifier=logreg, test_idx=range(105, 150))
 plt.title('Decision boundary and training sample')
 plt.xlabel('Petal length [standardized]')
 plt.ylabel('Petal width [standardized]')
@@ -165,9 +147,9 @@ plt.legend(loc='upper left')
 plt.savefig('images/03_logistic_regression_gd_sl/Decision_boundary_and_training_sample.png')
 
 
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # 5. GENERAL
-# ------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 # Show plots
