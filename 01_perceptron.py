@@ -213,7 +213,7 @@ plt.title('Decision boundary and training sample')
 plt.xlabel('Sepal length [cm]')
 plt.ylabel('Petal length [cm]')
 plt.legend(loc='upper left')
-plt.savefig('images/02_perceptron/Decision_boundary_and_training_sample.png')
+plt.savefig('images/01_perceptron/Decision_boundary_and_training_sample.png')
 
 
 # -------------------------------------------------------------------------------
