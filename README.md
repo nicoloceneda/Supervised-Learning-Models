@@ -34,10 +34,7 @@
 │                                              learn.
 │
 ├── 04_support_vector_machine_gd_sl.py     <-- Implementation of a support vector machine via sci- 
-│                                              kit learn.
-│
-├── xx_support_vector_machine_kernel_sl.py <-- Implementation of a kernel support vector machine  
-│                                              via sci-kit learn. 
+│                                              kit learn. 
 │
 ├── xx_decision_tree_sl.py                 <-- Implementation of a decision tree via sci-kit learn.
 │
