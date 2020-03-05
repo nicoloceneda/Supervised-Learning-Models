@@ -31,7 +31,7 @@ data = datasets.load_iris()
 y = data.target
 
 
-# Import the features
+# Extract the features
 
 X = data.data[:, [2, 3]]
 
@@ -56,7 +56,7 @@ X_test_std = std_scaler.transform(X_test)
 
 # Initialize a logistic regression object
 
-logreg = linear_model.LogisticRegression(C=100.0, random_state=1, solver='lbfgs', multi_class='ovr')
+logreg = linear_model.LogisticRegression(C=100, random_state=1, solver='lbfgs', multi_class='ovr')
 
 
 # Learn from the data via the fit method
