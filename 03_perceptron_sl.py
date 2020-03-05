@@ -80,7 +80,7 @@ print('Prediction accuracy: {}'.format(metrics.accuracy_score(y_test, y_predict)
 
 
 # -------------------------------------------------------------------------------
-# 4. PLOT THE DECISION BOUNDARY AND VERIFY THAT THE TRAINING SAMPLE IS CLASSIFIED CORRECTLY
+# 4. PLOT THE DECISION BOUNDARY AND VERIFY THAT THE TRAINING AND TEST SAMPLES ARE CLASSIFIED CORRECTLY
 # -------------------------------------------------------------------------------
 
 
