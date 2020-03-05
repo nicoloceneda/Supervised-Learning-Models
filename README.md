@@ -10,8 +10,11 @@
 ## Content of the Scripts:
 <pre>
 │
-├── 02_perceptron.py                       <-- Implementation of a single layer perceptron for bin-
+├── 01_perceptron.py                       <-- Implementation of a single layer perceptron for bin-
 │                                              ary classification.
+│
+├── 03_perceptron_sl.py                    <-- Implementation of a single layer perceptron for mul-
+│                                              ti-class classification via scikit-learn.
 │
 ├── 02_adaline_gd.py                       <-- Implementation of a single layer adaptive linear ne-
 │                                              uron for binary classification, via gradient descent 
@@ -20,9 +23,6 @@
 ├── 02_adaline_sgd.py                      <-- Implementation of a single layer adaptive linear ne-
 │                                              uron for binary classification, via stochastic grad-
 │                                              ient descent algorithm, with standardized features.      
-│
-├── 03_perceptron_sl.py                    <-- Implementation of a single layer perceptron for mul-
-│                                              ti-class classification via scikit-learn.
 │
 ├── 03_logistic_regression_gd.py           <-- Implementation of a single layer logistic regression
 │                                              for binary classification, via gradient descent alg-
