@@ -5,7 +5,7 @@
 *Website*: [www.nicoloceneda.com](http://www.nicoloceneda.com) \
 *Institution*: University of St Gallen \
 *Course*: Master of Banking and Finance \
-*Last update*: 03 March 2020
+*Last update*: 08 March 2020
 
 ## Content of the Scripts:
 <pre>
@@ -36,7 +36,9 @@
 ├── 04_support_vector_machine_gd_sl.py     <-- Implementation of a support vector machine via sci- 
 │                                              kit learn. 
 │
-├── xx_decision_tree_sl.py                 <-- Implementation of a decision tree via sci-kit learn.
+├── 05_decision_tree_sl.py                 <-- Implementation of a decision tree for multi-class 
+│                                              classification, with standardized features and gini
+│                                              impurity, using scikit-learn.
 │
 ├── xx_random_forest_sl.py                 <-- Implementation of a random forest via sci-kit learn.
 │
