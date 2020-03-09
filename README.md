@@ -40,10 +40,9 @@
 │                                              classification, with standardized features and gini
 │                                              impurity, using scikit-learn.
 │
-├── xx_random_forest_sl.py                 <-- Implementation of a random forest via sci-kit learn.
-│
-├── xx_k_nearest_neighbor.py               <-- Implementation of a k-nearest neighbor classifier  
-│                                              via sci-kit learn.
+├── 06_k_nearest_neighbors_sl.py           <-- Implementation of a k-nearest neighbors for multi-c-
+│                                              lass classification, with standardized features and 
+│                                              euclidean distance metric, using scikit-learn.
 │   
 ├── xx_mnist.py                            <-- Import, standardize, compress and save the mnist 
 │                                              dataset
