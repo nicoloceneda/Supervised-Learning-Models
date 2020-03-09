@@ -1,6 +1,5 @@
-""" DECISION TREE - SCIKIT LEARN
-    ----------------------------
-    Implementation of a decision tree for multi-class classification, with standardized features and gini impurity, using scikit-learn.
+""" K-NEAREST NEIGHBORS - SCIKIT LEARN
+    Implementation of a k-nearest neigbors for multi-class classification, with standardized features, using scikit-learn.
 """
 
 
@@ -12,7 +11,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as clr
-from sklearn import datasets, model_selection, preprocessing, tree, metrics
+from sklearn import datasets, model_selection, preprocessing, neighbors, metrics
 
 
 # -------------------------------------------------------------------------------
@@ -25,7 +24,7 @@ from sklearn import datasets, model_selection, preprocessing, tree, metrics
 data = datasets.load_iris()
 
 
-# Extract the class labels
+# Extract the class label
 
 y = data.target
 
@@ -35,7 +34,7 @@ y = data.target
 X = data.data[:, [2, 3]]
 
 
-# Separate the data into train and test subsets with the same proportions of class labels as the input dataset
+# Separate the data into train and test subsets with the same proportion of class labels as the input dataset
 
 X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.3, random_state=1, stratify=y)
 
@@ -49,18 +48,18 @@ X_test_std = std_scaler.transform(X_test)
 
 
 # -------------------------------------------------------------------------------
-# 2. TRAIN THE DECISION TREE
+# 2. TRAIN THE K-NEAREST NEIGHBORS
 # -------------------------------------------------------------------------------
 
 
-# Initialize a decision tree object
+# Initialize a k-nearest neighbors
 
-tree = tree.DecisionTreeClassifier(criterion='gini', max_depth=4, random_state=1)
+knn = neighbors.KNeighborsClassifier(n_neighbors=5, metric='minkowski', p=2)
 
 
 # Learn from the data via the fit method
 
-tree.fit(X_train_std, y_train)
+knn.fit(X_train_std, y_train)
 
 
 # -------------------------------------------------------------------------------
@@ -70,7 +69,7 @@ tree.fit(X_train_std, y_train)
 
 # Predict the classes of the samples in the test set
 
-y_predict = tree.predict(X_test_std)
+y_predict = knn.predict(X_test_std)
 
 
 # Evaluate the performance of the model
@@ -91,9 +90,9 @@ def plot_decision_regions(X, y, classifier, resolution=0.02, test_idx=None):
     """ Create a colormap object.
 
         Generate a matrix with two columns, where rows are all possible combinations of all numbers from min-1 to max+1 of the two series of
-        features. The matrix with two columns is needed because the decision tree was trained on a matrix with such shape.
+        features. The matrix with two columns is needed because the k-nearest neighbors was trained on a matrix with such shape.
 
-        Use the predict method of the tree to predict the class corresponding to all the possible combinations of features generated in the
+        Use the predict method of the knn to predict the class corresponding to all the possible combinations of features generated in the
         above matrix. The predict method will use the weights learnt during the training phase: since the cost function converged during the
         training phase, we expect the tree to find a decision boundary that correctly classifies all the samples in the training and test sets.
 
@@ -101,7 +100,7 @@ def plot_decision_regions(X, y, classifier, resolution=0.02, test_idx=None):
 
         Draw filled contours, where all possible combinations of features are associated to a Z, which is 1 or 0.
 
-        To verify that the tree correctly classified all the samples in the training set, plot the the original features in the scatter plot
+        To verify that the knn correctly classified all the samples in the training set, plot the the original features in the scatter plot
         and verify that they fall inside the correct region.
 
         Circle the sample belonging to the test set with a square.
@@ -137,12 +136,12 @@ def plot_decision_regions(X, y, classifier, resolution=0.02, test_idx=None):
 X_combined_std = np.vstack((X_train_std, X_test_std))
 y_combined = np.hstack((y_train, y_test))
 
-plot_decision_regions(X=X_combined_std, y=y_combined, classifier=tree, test_idx=range(105, 150))
+plot_decision_regions(X=X_combined_std, y=y_combined, classifier=knn, test_idx=range(105, 150))
 plt.title('Decision boundary and training sample')
 plt.xlabel('Petal length [standardized]')
 plt.ylabel('Petal width [standardized]')
 plt.legend(loc='upper left')
-plt.savefig('images/05_decision_tree_sl/Decision_boundary_and_training_sample.png')
+plt.savefig('images/06_k_nearest_neighbors_sl/Decision_boundary_and_training_sample.png')
 
 
 # -------------------------------------------------------------------------------
