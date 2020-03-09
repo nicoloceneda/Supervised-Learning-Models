@@ -1,5 +1,6 @@
 """ K-NEAREST NEIGHBORS - SCIKIT LEARN
-    Implementation of a k-nearest neigbors for multi-class classification, with standardized features, using scikit-learn.
+    Implementation of a k-nearest neigbors for multi-class classification, with standardized features and euclidean distance metric, using
+    scikit-learn.
 """
 
 
