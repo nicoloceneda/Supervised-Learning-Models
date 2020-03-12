@@ -200,7 +200,7 @@ class MultilayerPerceptron:
         n_epochs_strlen = len(str(self.n_epochs))
         self.eval = {'cost': [], 'train_acc': [], 'valid_acc': []}
 
-        y_train_enc = self.one_hot_encoding(y_train, n_labels)
+        y_train_enc = self.one_hot_encoding(y_train)
 
 
 # -------------------------------------------------------------------------------
