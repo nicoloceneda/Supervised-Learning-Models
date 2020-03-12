@@ -1,6 +1,6 @@
 """ MULTILAYER PERCEPTRON - GRADIENT DESCENT
     ----------------------------------------
-    Implementation of a multilayer perceptron for multi-class classification.
+    Implementation of a multilayer perceptron for multi-class classification, with one hidden layer.
 """
 
 
@@ -9,96 +9,66 @@
 # -------------------------------------------------------------------------------
 
 
-import os
-import struct
 import numpy as np
 import matplotlib.pyplot as plt
 
 
 # -------------------------------------------------------------------------------
-# 1. PREPARE THE DATA
+# 1. DESIGN THE MULTILAYER PERCEPTRON
 # -------------------------------------------------------------------------------
 
 
-# Function to import the train and test subsets from the mnist dataset
+# Import the dataset
 
-def load_mnist(path, kind):
+mnist = np.load('mnist dataset/compressed/mnist_std.npz')
 
-    labels_path = os.path.join(path, '{}-labels-idx1-ubyte'.format(kind))
-    images_path = os.path.join(path, '{}-images-idx3-ubyte'.format(kind))
+# Extract the class labels
 
-    with open(labels_path, 'rb') as lbpath:
-
-        file_protocol, num_items = struct.unpack('>II', lbpath.read(8))
-        labels = np.fromfile(lbpath, dtype=np.uint8)
-
-    with open(images_path, 'rb') as impath:
-
-        file_protocol, num_items, rows, cols = struct.unpack('>IIII', impath.read(16))
-        images = np.fromfile(impath, dtype=np.uint8).reshape(len(labels), 784)
-
-    return images, labels
+y_train = mnist['y_train']
+y_test = mnist['y_test']
 
 
-# Import the train and test subsets
+# Extract the features
 
-X_train, y_train = load_mnist(path='mnist dataset/original', kind='train')
-X_test, y_test = load_mnist(path='mnist dataset/original', kind='t10k')
-
-
-# Apply the standardization to scale the features
-
-X_train_std = ((X_train / 255) - 0.5) * 2
-X_test_std = ((X_test / 255) - 0.5) * 2
-
-
-# Plot examples of the digits
-
-fig, ax = plt.subplots(nrows=2, ncols=5, sharex=True, sharey=True)
-ax = ax.flatten()
-
-for i in range(10):
-
-    img = X_train_std[y_train == i][0].reshape(28, 28)
-    ax[i].imshow(img, cmap='Greys')
-
-ax[0].set_xticks([])
-ax[0].set_yticks([])
-plt.tight_layout()
-plt.savefig('images/07_multilayer_perceptron_gd/Examples_of_the_digits.png')
-
-
-# Plot examples of the same digit
-
-fix, ax = plt.subplots(nrows=5, ncols=5, sharex=True, sharey=True)
-ax = ax.flatten()
-
-for i in range(25):
-
-    img = X_train_std[y_train == 5][i].reshape(28, 28)
-    ax[i].imshow(img, cmap='Greys')
-
-ax[0].set_xticks([])
-ax[0].set_yticks([])
-plt.tight_layout()
-plt.savefig('images/07_multilayer_perceptron_gd/Examples_of_the_same_digit.png')
+X_train_std = mnist['X_train_std']
+X_test_std = mnist['X_test_std']
 
 
 # -------------------------------------------------------------------------------
-# 2. SAVE THE DATA
+# 2. TRAIN THE PERCEPTRON
 # -------------------------------------------------------------------------------
 
 
-# Save the train and test subsets in a compressed file
+class MultilayerPerceptron:
 
-np.savez_compressed('mnist dataset/compressed/mnist_std.npz', X_train_std=X_train_std, y_train=y_train, X_test_std=X_test, y_test=y_test)
+    """ Multilayer Perceptron classifier
 
+        Parameters:
+        ----------
+        eta : float
+            Learning rate (between 0.0 and 1.0)
+        n_epochs : int
+            Number of epochs.
+        shuffle : bool
+            If set to true it shuffles the training set before each epoch to prevent cycles.
+        n_samples_mb : int
+            Number of training samples per minibatch.
+        n_units_h : int
+            Number of units in the hidden layer.
+        l2 : float
+            Lambda value for L2-regularization.
 
-# -------------------------------------------------------------------------------
-# 3. GENERAL
-# -------------------------------------------------------------------------------
+        Attributes:
+        ----------
+        eval_train : dict
+            Dictionary containing the cost, training accuracy and validation accuracy for each epoch during training.
+    """
 
+    def __init__(self, eta=0.01, n_epochs=100, shuffle=True, n_samples_mb=1, n_units_h=30, l2=0.0):
 
-# Show plots
-
-plt.show()
+        self.eta = eta
+        self.n_epochs = n_epochs
+        self.shuffle = shuffle
+        self.n_samples_mb = n_samples_mb
+        self.n_units_h = n_units_h
+        self.l2 = l2
