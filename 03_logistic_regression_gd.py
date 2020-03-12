@@ -95,7 +95,7 @@ class LogisticRegressionGD:
     def step_activ(self, X):
 
         """ Calculate the net input and return the class label prediction after the unit step function
-            (Used in plot decision region function)
+            (Used in plot_decision_regions function)
 
             Parameters:
             ----------

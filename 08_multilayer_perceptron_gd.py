@@ -95,25 +95,23 @@ class MultilayerPerceptron:
 
         return onehot
 
-    def sigmoid_activ(self, X):
+    def sigmoid_activ(self, net_input):
 
-        """ Calculate the net input and return the probability level after the logistic sigmoid function
-            (Used in :TODO)
+        """ Return the probability level after the logistic sigmoid function
+            (Used in forward propagate function)
 
             Parameters:
             ----------
-            X : :TODO
+            net_input : array, shape = []
 
             Returns:
             -------
-            sigmoid_active : TODO
+            sigmoid_active : array
         """
-
-        net_input = self.w[0] + np.dot(X, self.w[1:]) # :TODO: check this line
 
         return 1 / (1 + np.exp(-np.clip(net_input, -250, 250)))
 
-    def forward(self, A_in):
+    def forward_propagate(self, A_in):
 
         """ Compute the forward propagation step
             (Used in :TODO)
@@ -137,4 +135,16 @@ class MultilayerPerceptron:
 
     def compute_cost(self, y_enc, output):
 
+        """ Compute cost function
 
+            Parameters:
+            ----------
+            y_enc : array, shape = [n_samples, n_labels]
+            output : array, shape = [n_samples, n_output_nits]
+
+            Returns:
+            -------
+            cost : float
+        """
+
+        l2_term =
