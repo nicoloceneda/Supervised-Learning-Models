@@ -186,6 +186,8 @@ class MultilayerPerceptron:
         n_features = X_train.shape[1]
         n_labels = np.unique(y_train).shape[0]
 
+        # Initialize weights
+
         rgen = np.random.RandomState(seed=1)
 
         self.b_h = np.zeros(self.n_units_h)
@@ -193,8 +195,12 @@ class MultilayerPerceptron:
         self.b_out = np.zeros(n_labels)
         self.W_out = rgen.normal(loc=0.0, scale=0.1, size=(self.n_units_h, n_labels))
 
-        epoch_strlen = len(str(self.n_epochs))
+        # Progress formatting
+
+        n_epochs_strlen = len(str(self.n_epochs))
         self.eval = {'cost': [], 'train_acc': [], 'valid_acc': []}
+
+        y_train_enc = self.one_hot_encoding(y_train, n_labels)
 
 
 # -------------------------------------------------------------------------------
