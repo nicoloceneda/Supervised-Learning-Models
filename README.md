@@ -48,7 +48,7 @@
 │                                              tures and class labels.
 │
 ├── 08_multilayer_perceptron.py            <-- Implementation of a multilayer perceptron for multi-
-│                                              class classification.
+│                                              class classification, with one hidden layer.
 │
 ├── xx_multilayer_perceptron_tf_k.py       <-- Implementation of a multilayer perceptron via 
 │                                              Tensorflow's Layers.
