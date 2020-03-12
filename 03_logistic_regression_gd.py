@@ -99,7 +99,7 @@ class LogisticRegressionGD:
 
             Parameters:
             ----------
-            array, shape = [X0X1_combs.shape[0], ]
+            X : array, shape = [X0X1_combs.shape[0], ]
 
             Returns:
             -------

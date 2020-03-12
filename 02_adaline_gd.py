@@ -98,7 +98,7 @@ class AdalineGD:
 
             Parameters:
             ----------
-            array, shape = [X0X1_combs.shape[0], n_features]
+            X : array, shape = [X0X1_combs.shape[0], n_features]
 
             Returns:
             -------

@@ -73,8 +73,68 @@ class MultilayerPerceptron:
         self.n_units_h = n_units_h
         self.l2 = l2
 
-    def one_hot_representation(self, y, n_classes):
+    def one_hot_encoding(self, y):
 
-        """ Encode
+        """ Encode the labels into the one-hot representation
+            (Used in :TODO )
+
+            Parameters:
+            ----------
+            y : array, shape = [n_samples, ]
+
+            Returns:
+            -------
+            onehot : array, shape = [n_samples, n_labels]
         """
+
+        onehot = np.zeros(len(y), np.unique(y))
+
+        for sample, label in enumerate(y.astype(int)):
+
+            onehot[sample, label] = 1
+
+        return onehot
+
+    def sigmoid_activ(self, X):
+
+        """ Calculate the net input and return the probability level after the logistic sigmoid function
+            (Used in :TODO)
+
+            Parameters:
+            ----------
+            X : :TODO
+
+            Returns:
+            -------
+            sigmoid_active : TODO
+        """
+
+        net_input = self.w[0] + np.dot(X, self.w[1:]) # :TODO: check this line
+
+        return 1 / (1 + np.exp(-np.clip(net_input, -250, 250)))
+
+    def forward(self, A_in):
+
+        """ Compute the forward propagation step
+            (Used in :TODO)
+
+            Parameters:
+            ----------
+            A_in :
+
+            Returns:
+            -------
+
+        """
+
+        Z_h = self.b_h + np.dot(A_in, self.W_h)
+        A_h = self.sigmoid_activ(Z_h)
+
+        Z_out = self.b_out + np.dot(A_h, self.W_out)
+        A_out = self.sigmoid_activ(Z_out)
+
+        return Z_h, A_h, Z_out, A_out
+
+    def compute_cost(self, y_enc, output):
+
 
