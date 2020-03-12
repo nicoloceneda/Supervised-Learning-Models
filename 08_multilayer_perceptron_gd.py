@@ -87,7 +87,7 @@ class MultilayerPerceptron:
             onehot : array, shape = [n_samples, n_labels]
         """
 
-        onehot = np.zeros(len(y_train), np.unique(y_train))
+        onehot = np.zeros(y_train.shape[0], np.unique(y_train).shape[0])
 
         for sample, label in enumerate(y_train.astype(int)):
 
@@ -173,17 +173,25 @@ class MultilayerPerceptron:
 
             Parameters:
             ----------
-            X_train : array, shape = [n_samples, n_features]
-            y_train : array, shape = [n_samples, ]
-            X_valid : array, shape = [n_samples, n_features]
-            y_valid : array, shape = [n_samples, ]
+            X_train : array, shape = [n_samples_train, n_features]
+            y_train : array, shape = [n_samples_train, ]
+            X_valid : array, shape = [n_samples_valid, n_features]
+            y_valid : array, shape = [n_samples_valid, ]
 
             Returns:
             -------
             self : object
         """
 
-        n_output = np.unique(y_train).shape[0]
+        n_features = X_train.shape[1]
+        n_labels = np.unique(y_train).shape[0]
+
+        rgen = np.random.RandomState(seed=1)
+
+        self.b_h = np.zeros(self.n_units_h)
+        self.W_h = rgen.normal(loc=0.0, scale=0.1, size=(n_features, n_labels))
+        self.b_out = np.zeros(n_labels)
+        self.W_out = rgen.normal(loc=0.0, scale=0.1, size=(self.n_units_h, n_labels))
 
 
 # -------------------------------------------------------------------------------
@@ -191,5 +199,11 @@ class MultilayerPerceptron:
 # -------------------------------------------------------------------------------
 
 
+# Initiate a multilayer perceptron object
+
 mlp = MultilayerPerceptron(eta=0.0005, n_epochs=200, shuffle=True, n_samples_mb=100, n_units_h=100, l2=0.01)
 
+
+# Learn from the data via the fit method
+
+mlp.fit(X_train_std[:55000], y_train[:55000], X_train_std[55000:], y_train[55000:])
