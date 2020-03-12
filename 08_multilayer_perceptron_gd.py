@@ -189,9 +189,12 @@ class MultilayerPerceptron:
         rgen = np.random.RandomState(seed=1)
 
         self.b_h = np.zeros(self.n_units_h)
-        self.W_h = rgen.normal(loc=0.0, scale=0.1, size=(n_features, n_labels))
+        self.W_h = rgen.normal(loc=0.0, scale=0.1, size=(n_features, self.n_units_h))
         self.b_out = np.zeros(n_labels)
         self.W_out = rgen.normal(loc=0.0, scale=0.1, size=(self.n_units_h, n_labels))
+
+        epoch_strlen = len(str(self.n_epochs))
+        self.eval = {'cost': [], 'train_acc': [], 'valid_acc': []}
 
 
 # -------------------------------------------------------------------------------
