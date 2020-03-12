@@ -73,7 +73,7 @@ class MultilayerPerceptron:
         self.n_units_h = n_units_h
         self.l2 = l2
 
-    def one_hot_encoding(self, y_train):
+    def one_hot_encoding(self, y_train, n_labels):
 
         """ Encode the labels into the one-hot representation
             (Used in fit method)
@@ -81,13 +81,14 @@ class MultilayerPerceptron:
             Parameters:
             ----------
             y_train : array, shape = [n_samples, ]
+            n_labels : int
 
             Returns:
             -------
             onehot : array, shape = [n_samples, n_labels]
         """
 
-        onehot = np.zeros(y_train.shape[0], np.unique(y_train).shape[0])
+        onehot = np.zeros(y_train.shape[0], n_labels)
 
         for sample, label in enumerate(y_train.astype(int)):
 
@@ -200,7 +201,7 @@ class MultilayerPerceptron:
         n_epochs_strlen = len(str(self.n_epochs))
         self.eval = {'cost': [], 'train_acc': [], 'valid_acc': []}
 
-        y_train_enc = self.one_hot_encoding(y_train)
+        y_train_enc = self.one_hot_encoding(y_train, n_labels)
 
 
 # -------------------------------------------------------------------------------
