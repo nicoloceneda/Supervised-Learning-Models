@@ -73,36 +73,36 @@ class MultilayerPerceptron:
         self.n_units_h = n_units_h
         self.l2 = l2
 
-    def one_hot_encoding(self, y):
+    def one_hot_encoding(self, y_train):
 
         """ Encode the labels into the one-hot representation
-            (Used in :TODO )
+            (Used in fit method)
 
             Parameters:
             ----------
-            y : array, shape = [n_samples, ]
+            y_train : array, shape = [n_samples, ]
 
             Returns:
             -------
             onehot : array, shape = [n_samples, n_labels]
         """
 
-        onehot = np.zeros(len(y), np.unique(y))
+        onehot = np.zeros(len(y_train), np.unique(y_train))
 
-        for sample, label in enumerate(y.astype(int)):
+        for sample, label in enumerate(y_train.astype(int)):
 
             onehot[sample, label] = 1
 
         return onehot
 
-    def sigmoid_activ(self, net_input):
+    def sigmoid_activ(self, Z):
 
         """ Return the probability level after the logistic sigmoid function
-            (Used in forward propagate function)
+            (Used in forward propagate method)
 
             Parameters:
             ----------
-            net_input : array, shape = []
+            Z : array, shape = [n_samples_mb, n_units_h-1]
 
             Returns:
             -------
@@ -147,4 +147,49 @@ class MultilayerPerceptron:
             cost : float
         """
 
-        l2_term =
+        l2_term = self.l2 * (np.sum(self.W_h ** 2) + np.sum(self.W_out ** 2))
+        cost = np.sum(- y_enc * np.log(output) - (1 - y_enc) * np.log(1 - output)) + l2_term # TODO: why not -l2_term
+
+    def predict(self, X):
+
+        """ Predict class labels
+
+            Parameters:
+            ----------
+            X : array, shape = [n_samples, n_features]
+
+            Returns:
+            -------
+            y_pred : array, shape = [n_samples, ]
+        """
+
+        Z_h, A_h, Z_out, A_out = self.forward(X)
+        y_pred = np.argmax(Z_out, axis=1)
+        return y_pred
+
+    def fit(self, X_train, y_train, X_valid, y_valid):
+
+        """ Learn the weights from the training data
+
+            Parameters:
+            ----------
+            X_train : array, shape = [n_samples, n_features]
+            y_train : array, shape = [n_samples, ]
+            X_valid : array, shape = [n_samples, n_features]
+            y_valid : array, shape = [n_samples, ]
+
+            Returns:
+            -------
+            self : object
+        """
+
+        n_output = np.unique(y_train).shape[0]
+
+
+# -------------------------------------------------------------------------------
+# 3. TRAIN THE MULTILAYER PERCEPTRON
+# -------------------------------------------------------------------------------
+
+
+mlp = MultilayerPerceptron(eta=0.0005, n_epochs=200, shuffle=True, n_samples_mb=100, n_units_h=100, l2=0.01)
+
