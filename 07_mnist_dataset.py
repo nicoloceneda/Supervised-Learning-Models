@@ -1,6 +1,6 @@
 """ MNIST DATASET
     -------------
-    Download mnist dataset and save the standardized features and class labels.
+    Download the mnist dataset and save the standardized features and class labels.
 """
 
 
