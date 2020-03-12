@@ -44,10 +44,11 @@
 │                                              lass classification, with standardized features and 
 │                                              euclidean distance metric, using scikit-learn.
 │   
-├── xx_mnist.py                            <-- Import, standardize, compress and save the mnist 
-│                                              dataset
+├── 07_mnist_dataset.py                    <-- Download mnist dataset and save the standardized fea-
+│                                              tures and class labels.
 │
-├── xx_multilayer_perceptron.py            <-- Implementation of a multilayer perceptron.
+├── 08_multilayer_perceptron.py            <-- Implementation of a multilayer perceptron for multi-
+│                                              class classification.
 │
 ├── xx_multilayer_perceptron_tf_k.py       <-- Implementation of a multilayer perceptron via 
 │                                              Tensorflow's Layers.
