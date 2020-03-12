@@ -89,15 +89,15 @@ class AdalineSGD:
     def linear_activ(self, Xi):
 
         """ Calculate and return the net input
-        (Used in fit method)
+            (Used in fit method)
 
-        Parameters:
-        ----------
-        Xi : array, shape = [n_features, ]
+            Parameters:
+            ----------
+            Xi : array, shape = [n_features, ]
 
-        Returns:
-        -------
-        net_input : int
+            Returns:
+            -------
+            net_input : int
         """
 
         net_input = self.w[0] + np.dot(Xi, self.w[1:])

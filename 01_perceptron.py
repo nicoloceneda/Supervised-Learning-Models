@@ -91,7 +91,7 @@ class Perceptron:
             -------
             step_activ : int in fit method
                          array, shape = [X0X1_combs.shape[0], ] in plot_decision_regions function
-            """
+        """
 
         net_input = self.w[0] + np.dot(X, self.w[1:])
 

@@ -72,3 +72,9 @@ class MultilayerPerceptron:
         self.n_samples_mb = n_samples_mb
         self.n_units_h = n_units_h
         self.l2 = l2
+
+    def one_hot_representation(self, y, n_classes):
+
+        """ Encode
+        """
+
