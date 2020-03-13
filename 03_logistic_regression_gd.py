@@ -165,7 +165,7 @@ logreg = LogisticRegressionGD(eta=0.05, n_epochs=1000)
 logreg.fit(X_std, y)
 
 
-# Plot the cost function per iter
+# Plot the cost function per epoch
 
 plt.figure()
 plt.plot(range(1, len(logreg.cost_fun) + 1), logreg.cost_fun, marker='o')
