@@ -169,8 +169,8 @@ logreg.fit(X_std, y)
 
 plt.figure()
 plt.plot(range(1, len(logreg.cost_fun) + 1), logreg.cost_fun, marker='o')
-plt.title('LogisticRegressionGD with standardization')
-plt.xlabel("Epoch")
+plt.title('Cost function per epoch')
+plt.xlabel('Epoch')
 plt.ylabel('Cost function')
 plt.savefig('images/03_logistic_regression_gd/LogisticRegressionGD_with_standardization.png')
 
