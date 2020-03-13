@@ -70,8 +70,7 @@ class AdalineSGD:
 
             if self.shuffle:
 
-                pos = rgen.permutation(len(y))
-                X, y = X[pos], y[pos]
+                rgen.shuffle([X, y])
 
             cost = 0
 
