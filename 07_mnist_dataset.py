@@ -65,7 +65,7 @@ for i in range(10):
 ax[0].set_xticks([])
 ax[0].set_yticks([])
 plt.tight_layout()
-plt.savefig('images/07_multilayer_perceptron_gd/Examples_of_the_digits.png')
+plt.savefig('images/07_mnist dataset/Examples_of_the_digits.png')
 
 
 # Plot examples of the same digit
@@ -81,7 +81,7 @@ for i in range(25):
 ax[0].set_xticks([])
 ax[0].set_yticks([])
 plt.tight_layout()
-plt.savefig('images/07_multilayer_perceptron_gd/Examples_of_the_same_digit.png')
+plt.savefig('images/07_mnist dataset/Examples_of_the_same_digit.png')
 
 
 # -------------------------------------------------------------------------------
