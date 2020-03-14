@@ -136,27 +136,21 @@ class MultilayerPerceptron:
 
             Returns:
             -------
-            Z_h : array, shape = [n_hidden, ] + [n_samples in train/valid/test, n_features] * [n_features, n_hidden]
-                               = [n_samples in train/valid/test, n_hidden] in predict method
-                  array, shape = [n_hidden, ] + [n_samples_mb, n_features] * [n_features, n_hidden]
-                               = [n_samples_mb, n_hidden] in fit method {forward propagation}
-                  array, shape = [n_hidden, ] + [n_samples in train, n_features] * [n_features, n_hidden]
-                               = [n_samples in train, n_hidden] in fit method {evaluation}
+            In predict method:
+            Z_h : array, shape = [n_hidden, ] + [n_samples in tr/va/te, n_features] * [n_features, n_hidden] = [n_samples in tr/va/te, n_hidden]
+            Z_out : array, shape = [n_labels, ] + [n_samples in tr/va/te, n_hidden] * [n_hidden, n_labels] = [n_samples in tr/va/te, n_labels]
 
-            A_h : array, shape = [n_samples in train/valid/test, n_hidden] in predict method
-                  array, shape = [n_samples_mb, n_hidden] in fit method {forward propagation}
-                  array, shape = [n_samples in train, n_hidden] in fit method {evaluation}
+            In fit method {forward propagation}:
+            Z_h : array, shape = [n_hidden, ] + [n_samples_mb, n_features] * [n_features, n_hidden] = [n_samples_mb, n_hidden]
+            Z_out : array, shape = [n_labels, ] + [n_samples_mb, n_hidden] * [n_hidden, n_labels] = [n_samples_mb, n_labels]
 
-            Z_out : array, shape = [n_labels, ] + [n_samples in train/valid/test, n_hidden] * [n_hidden, n_labels]
-                                 = [n_samples in train/valid/test, n_labels] in predict method
-                    array, shape = [n_labels, ] + [n_samples_mb, n_hidden] * [n_hidden, n_labels]
-                                 = [n_samples_mb, n_labels] in fit method {forward propagation}
-                    array, shape = [n_labels, ] + [n_samples in train, n_hidden] * [n_hidden, n_labels]
-                                 = [n_samples in train, n_labels] in fit method {evaluation}
+            In fit method {evaluation}:
+            Z_h : array, shape = [n_hidden, ] + [n_samples in train, n_features] * [n_features, n_hidden] = [n_samples in train, n_hidden]
+            Z_out : array, shape = [n_labels, ] + [n_samples in train, n_hidden] * [n_hidden, n_labels] = [n_samples in train, n_labels]
 
-            A_out : array, shape = [n_samples in train/valid/test, n_labels] in predict method
-                    array, shape = [n_samples_mb, n_labels] in fit method {forward propagation}
-                    array, shape = [n_samples in train, n_labels] in fit method {evaluation}
+            A_h : array, shape = same as Z_h
+
+            A_out : array, shape = same as Z_out
         """
 
         Z_h = self.b_h + np.dot(A_in, self.W_h)
