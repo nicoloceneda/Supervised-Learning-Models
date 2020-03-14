@@ -39,6 +39,14 @@ X_test_std = mnist['X_test_std']
 # -------------------------------------------------------------------------------
 
 
+""" Clarifying notation:
+
+    n_samples = bs
+    n_features = m (basis activation excluded)
+    n_hidden = d (basis activation excluded)
+    n_labels = t
+"""
+
 class MultilayerPerceptron:
 
     """ Multilayer Perceptron classifier
@@ -77,16 +85,16 @@ class MultilayerPerceptron:
     def one_hot_encode(self, y_train, n_labels):
 
         """ Encode the labels into the one-hot representation
-            (Used in fit method)
+            (Used in fit method - weight initialization step)
 
             Parameters:
             ----------
-            y_train : array, shape = [n_samples, ]
+            y_train : array, shape = [n_samples in train, ]
             n_labels : int
 
             Returns:
             -------
-            onehot : array, shape = [n_samples, n_labels]
+            onehot : array, shape = [n_samples in train, n_labels]
         """
 
         onehot = np.zeros(y_train.shape[0], n_labels)
@@ -104,7 +112,7 @@ class MultilayerPerceptron:
 
             Parameters:
             ----------
-            Z : array, shape = [n_samples_mb, n_hidden-1]
+            Z : array, shape = [n_samples_mb, n_hidden-1] TODO: check shape Z_h and Z_out
                 array, shape = [n_samples_mb, n_labels]
 
             Returns:
@@ -118,15 +126,37 @@ class MultilayerPerceptron:
     def forward_propagate(self, A_in):
 
         """ Compute the forward propagation step
-            (Used in :TODO)
+            (Used in predict method and fit method {forward propagation, evaluation})
 
             Parameters:
             ----------
-            A_in :
+            A_in : array, shape = [n_samples in train/valid/test, n_features] in predict method
+                   array, shape = [n_samples_mb, n_features] in fit method {forward propagation}
+                   array, shape = [n_samples in train, n_features] in fit method {evaluation}
 
             Returns:
             -------
+            Z_h : array, shape = [n_hidden, ] + [n_samples in train/valid/test, n_features] * [n_features, n_hidden]
+                               = [n_samples in train/valid/test, n_hidden] in predict method
+                  array, shape = [n_hidden, ] + [n_samples_mb, n_features] * [n_features, n_hidden]
+                               = [n_samples_mb, n_hidden] in fit method {forward propagation}
+                  array, shape = [n_hidden, ] + [n_samples in train, n_features] * [n_features, n_hidden]
+                               = [n_samples in train, n_hidden] in fit method {evaluation}
 
+            A_h : array, shape = [n_samples in train/valid/test, n_hidden] in predict method
+                  array, shape = [n_samples_mb, n_hidden] in fit method {forward propagation}
+                  array, shape = [n_samples in train, n_hidden] in fit method {evaluation}
+
+            Z_out : array, shape = [n_labels, ] + [n_samples in train/valid/test, n_hidden] * [n_hidden, n_labels]
+                                 = [n_samples in train/valid/test, n_labels] in predict method
+                    array, shape = [n_labels, ] + [n_samples_mb, n_hidden] * [n_hidden, n_labels]
+                                 = [n_samples_mb, n_labels] in fit method {forward propagation}
+                    array, shape = [n_labels, ] + [n_samples in train, n_hidden] * [n_hidden, n_labels]
+                                 = [n_samples in train, n_labels] in fit method {evaluation}
+
+            A_out : array, shape = [n_samples in train/valid/test, n_labels] in predict method
+                    array, shape = [n_samples_mb, n_labels] in fit method {forward propagation}
+                    array, shape = [n_samples in train, n_labels] in fit method {evaluation}
         """
 
         Z_h = self.b_h + np.dot(A_in, self.W_h)
@@ -136,6 +166,26 @@ class MultilayerPerceptron:
         A_out = self.sigmoid_activ(Z_out)
 
         return Z_h, A_h, Z_out, A_out
+
+    def predict(self, X):
+
+        """ Predict class labels
+            (Used in fit method {evaluation} and test step)
+
+            Parameters:
+            ----------
+            X : array, shape = [n_samples in train, n_features] in fit method {evaluation}
+                array, shape = [n_samples in valid, n_features] in fit method {evaluation}
+                array, shape = [n_samples in test, n_features] in test section
+
+            Returns:
+            -------
+            y_pred : array, shape = [n_samples, ]
+        """
+
+        Z_h, A_h, Z_out, A_out = self.forward_propagate(X)
+        y_pred = np.argmax(Z_out, axis=1)
+        return y_pred
 
     def compute_cost(self, y_enc, output):
 
@@ -153,23 +203,6 @@ class MultilayerPerceptron:
 
         l2_term = self.l2 * (np.sum(self.W_h ** 2) + np.sum(self.W_out ** 2))
         cost = np.sum(- y_enc * np.log(output) - (1 - y_enc) * np.log(1 - output)) + l2_term # TODO: why not -l2_term
-
-    def predict(self, X):
-
-        """ Predict class labels
-
-            Parameters:
-            ----------
-            X : array, shape = [n_samples, n_features]
-
-            Returns:
-            -------
-            y_pred : array, shape = [n_samples, ]
-        """
-
-        Z_h, A_h, Z_out, A_out = self.forward(X)
-        y_pred = np.argmax(Z_out, axis=1)
-        return y_pred
 
     def fit(self, X_train, y_train, X_valid, y_valid):
 
