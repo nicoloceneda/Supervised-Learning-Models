@@ -74,7 +74,7 @@ class MultilayerPerceptron:
         self.n_samples_mb = n_samples_mb
         self.n_hidden = n_hidden
 
-    def one_hot_encoding(self, y_train, n_labels):
+    def one_hot_encode(self, y_train, n_labels):
 
         """ Encode the labels into the one-hot representation
             (Used in fit method)
@@ -100,18 +100,20 @@ class MultilayerPerceptron:
     def sigmoid_activ(self, Z):
 
         """ Return the probability level after the logistic sigmoid function
-            (Used in forward propagate method)
+            (Used in forward_propagate method)
 
             Parameters:
             ----------
-            Z : array, shape = [n_samples_mb, n_units_h-1]
+            Z : array, shape = [n_samples_mb, n_hidden-1]
+                array, shape = [n_samples_mb, n_labels]
 
             Returns:
             -------
-            sigmoid_active : array
+            sigmoid_active : array, shape = [n_samples_mb, n_hidden-1]
+                             array, shape = [n_samples_mb, n_labels]
         """
 
-        return 1 / (1 + np.exp(-np.clip(net_input, -250, 250)))
+        return 1 / (1 + np.exp(-np.clip(Z, -250, 250)))
 
     def forward_propagate(self, A_in):
 
@@ -316,6 +318,12 @@ plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
 plt.legend(loc='bottom right')
 plt.savefig('images/08_multilayer_perceptron_gd/Train_and_valid_accuracy_per_epoch')
+
+
+# Calculate the prediction accuracy
+
+accuracy = np.sum(y_test == mlp.predict(X_test_std)).astype(np.float) / X_test_std.shape[0]
+print('Training accuracy: {}%'.format(accuracy * 100))
 
 
 # -------------------------------------------------------------------------------
