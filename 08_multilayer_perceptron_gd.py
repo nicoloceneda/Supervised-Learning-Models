@@ -112,13 +112,11 @@ class MultilayerPerceptron:
 
             Parameters:
             ----------
-            Z : array, shape = [n_samples_mb, n_hidden-1] TODO: check shape Z_h and Z_out
-                array, shape = [n_samples_mb, n_labels]
+            Z : array, shape = see forward_propagate method
 
             Returns:
             -------
-            sigmoid_active : array, shape = [n_samples_mb, n_hidden-1]
-                             array, shape = [n_samples_mb, n_labels]
+            sigmoid_active : same as Z
         """
 
         return 1 / (1 + np.exp(-np.clip(Z, -250, 250)))
@@ -138,19 +136,21 @@ class MultilayerPerceptron:
             -------
             In predict method:
             Z_h : array, shape = [n_hidden, ] + [n_samples in tr/va/te, n_features] * [n_features, n_hidden] = [n_samples in tr/va/te, n_hidden]
+            A_h : array, shape = [n_samples in tr/va/te, n_hidden]
             Z_out : array, shape = [n_labels, ] + [n_samples in tr/va/te, n_hidden] * [n_hidden, n_labels] = [n_samples in tr/va/te, n_labels]
+            A_out : array, shape = [n_samples in tr/va/te, n_labels]
 
             In fit method {forward propagation}:
             Z_h : array, shape = [n_hidden, ] + [n_samples_mb, n_features] * [n_features, n_hidden] = [n_samples_mb, n_hidden]
+            A_h : array, shape = [n_samples_mb, n_hidden]
             Z_out : array, shape = [n_labels, ] + [n_samples_mb, n_hidden] * [n_hidden, n_labels] = [n_samples_mb, n_labels]
+            A_out : array, shape = [n_samples_mb, n_labels]
 
             In fit method {evaluation}:
             Z_h : array, shape = [n_hidden, ] + [n_samples in train, n_features] * [n_features, n_hidden] = [n_samples in train, n_hidden]
+            A_h : array, shape = [n_samples in train, n_hidden]
             Z_out : array, shape = [n_labels, ] + [n_samples in train, n_hidden] * [n_hidden, n_labels] = [n_samples in train, n_labels]
-
-            A_h : array, shape = same as Z_h
-
-            A_out : array, shape = same as Z_out
+            A_out : array, shape = [n_samples in train, n_labels]
         """
 
         Z_h = self.b_h + np.dot(A_in, self.W_h)
@@ -174,21 +174,25 @@ class MultilayerPerceptron:
 
             Returns:
             -------
-            y_pred : array, shape = [n_samples, ]
+            y_pred : array, shape = [n_samples in train, n_labels] in fit method {evaluation}
+                     array, shape = [n_samples in valid, n_labels] in fit method {evaluation}
+                     array, shape = [n_samples in test, n_labels] in test section
         """
 
         Z_h, A_h, Z_out, A_out = self.forward_propagate(X)
         y_pred = np.argmax(Z_out, axis=1)
+
         return y_pred
 
-    def compute_cost(self, y_enc, output):
+    def compute_cost(self, y_train_one_hot, A_out):
 
         """ Compute cost function
+            (Used in fit method {evaluation})
 
             Parameters:
             ----------
-            y_enc : array, shape = [n_samples, n_labels]
-            output : array, shape = [n_samples, n_output_nits]
+            y_train_one_hot : array, shape = [n_samples in train, n_labels]
+            A_out : array, shape = [n_samples in train, n_labels]
 
             Returns:
             -------
@@ -196,7 +200,7 @@ class MultilayerPerceptron:
         """
 
         l2_term = self.l2 * (np.sum(self.W_h ** 2) + np.sum(self.W_out ** 2))
-        cost = np.sum(- y_enc * np.log(output) - (1 - y_enc) * np.log(1 - output)) + l2_term # TODO: why not -l2_term
+        cost = np.sum(- y_train_one_hot * np.log(A_out) - (1 - y_train_one_hot) * np.log(1 - A_out)) + l2_term
 
     def fit(self, X_train, y_train, X_valid, y_valid):
 
