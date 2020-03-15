@@ -184,7 +184,7 @@ class MultilayerPerceptron:
 
         return y_pred
 
-    def compute_cost(self, y_train_one_hot, A_out):
+    def cost_function(self, y_train_one_hot, A_out):
 
         """ Compute cost function
             (Used in fit method {evaluation})
@@ -196,21 +196,22 @@ class MultilayerPerceptron:
 
             Returns:
             -------
-            cost : float
+            cost_function : float
         """
 
         l2_term = self.l2 * (np.sum(self.W_h ** 2) + np.sum(self.W_out ** 2))
-        cost = np.sum(- y_train_one_hot * np.log(A_out) - (1 - y_train_one_hot) * np.log(1 - A_out)) + l2_term
 
-    def fit(self, X_train, y_train, X_valid, y_valid):
+        return np.sum(- y_train_one_hot * np.log(A_out) - (1 - y_train_one_hot) * np.log(1 - A_out)) + l2_term
+
+    def fit(self, X_train_std, y_train, X_valid_std, y_valid):
 
         """ Learn the weights from the training data
 
             Parameters:
             ----------
-            X_train : array, shape = [n_samples_train, n_features]
+            X_train_std : array, shape = [n_samples_train, n_features]
             y_train : array, shape = [n_samples_train, ]
-            X_valid : array, shape = [n_samples_valid, n_features]
+            X_valid_std : array, shape = [n_samples_valid, n_features]
             y_valid : array, shape = [n_samples_valid, ]
 
             Returns:
@@ -220,40 +221,39 @@ class MultilayerPerceptron:
 
         # Dataset characteristics
 
-        n_samples = X_train.shape[0]
-        n_features = X_train.shape[1]
+        n_features = X_train_std.shape[1]
         n_labels = np.unique(y_train).shape[0]
+        n_samples_train = X_train_std.shape[0]
 
         # Initialize weights
 
         rgen = np.random.RandomState(seed=1)
 
-        self.b_h = np.zeros(self.n_units_h)
-        self.W_h = rgen.normal(loc=0.0, scale=0.1, size=(n_features, self.n_units_h))
+        self.b_h = np.zeros(self.n_hidden)
+        self.W_h = rgen.normal(loc=0.0, scale=0.1, size=(n_features, self.n_hidden))
         self.b_out = np.zeros(n_labels)
-        self.W_out = rgen.normal(loc=0.0, scale=0.1, size=(self.n_units_h, n_labels))
+        self.W_out = rgen.normal(loc=0.0, scale=0.1, size=(self.n_hidden, n_labels))
 
         # TODO: understand
 
         n_epochs_strlen = len(str(self.n_epochs))
         self.eval = {'cost': [], 'train_acc': [], 'valid_acc': []}
 
-
-        y_train_enc = self.one_hot_encoding(y_train, n_labels)
-
         # Iterate over each epoch and minibatch
+
+        y_train_enc = self.one_hot_encode(y_train, n_labels)
 
         for epoch in range(self.n_epochs):
 
-            indices = np.arange(n_samples)
+            indices = np.arange(n_samples_train)
 
             if self.shuffle:
 
                 rgen.shuffle(indices)
 
-            for start_mb in range(0, n_samples - self.n_samples_mb + 1, self.n_samples_mb):
+            for start_mb in range(0, n_samples_train - self.n_samples_mb + 1, self.n_samples_mb):
 
-                index_mb = indices[start_mb : start_mb + self.n_samples_mb]
+                index_mb = indices[start_mb:start_mb + self.n_samples_mb]
 
                 # Forward propagate
 
@@ -287,7 +287,7 @@ class MultilayerPerceptron:
 
             z_h, a_h, z_out, a_out = self._forward(X_train)
 
-            cost = self._compute_cost(y_enc=y_train_enc,
+            cost = self.cost_function(y_enc=y_train_enc,
                                           output=a_out)
 
             y_train_pred = self.predict(X_train)
@@ -322,7 +322,7 @@ mlp = MultilayerPerceptron(eta=0.0005, n_epochs=200, shuffle=True, l2=0.01, n_sa
 
 # Learn from the data via the fit method: 55000 samples for training, 5000 samples for validation
 
-mlp.fit(X_train=X_train_std[:55000], y_train=y_train[:55000], X_valid=X_train_std[55000:], y_valid=y_train[55000:])
+mlp.fit(X_train_std[:55000], y_train[:55000], X_train_std[55000:], y_train[55000:])
 
 
 # -------------------------------------------------------------------------------
@@ -351,10 +351,32 @@ plt.legend(loc='bottom right')
 plt.savefig('images/08_multilayer_perceptron_gd/Train_and_valid_accuracy_per_epoch')
 
 
-# Calculate the prediction accuracy
+# Calculate the prediction accuracy (generalization performance)
 
-accuracy = np.sum(y_test == mlp.predict(X_test_std)).astype(np.float) / X_test_std.shape[0]
+y_test_predict = mlp.predict(X_test_std)
+accuracy = np.sum(y_test == y_test_predict).astype(np.float) / X_test_std.shape[0]
 print('Training accuracy: {}%'.format(accuracy * 100))
+
+
+# Plot some of the images that have been misclassified
+
+misclassified_images = X_test_std[y_test != y_test_predict][:25]
+misclassified_label = y_test_predict[y_test != y_test_predict][:25]
+correct_label = y_test[y_test != y_test_predict][:25]
+
+fig, ax = plt.subplots(n_rows=5, ncols=5, sharex=True, sharey=True)
+ax = ax.flatten()
+
+for i in range(25):
+
+    img = misclassified_images[i].reshape(28, 28)
+    ax[i].imshow(img, cmap='Greys', interpolation='nearest')
+    ax[i].set_title('{}) t: {} p: {}'.format(i + 1, misclassified_label[i], correct_label[i]))
+
+ax[0].set_xticks([])
+ax[0].set_yticks([])
+plt.tight_layout()
+plt.savefig('images/07_mnist 08_multilayer_perceptron_gd/Examples_of_misclassified_images.png')
 
 
 # -------------------------------------------------------------------------------
