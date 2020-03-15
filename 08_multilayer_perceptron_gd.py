@@ -62,7 +62,7 @@ class MultilayerPerceptron:
         l2 : float
             Lambda parameter for L2-regularization to decrease degree of overfitting.
         n_samples_mb : int
-            Number of training samples per minibatch.
+            Number of training samples per mini-batch.
         n_hidden : int
             Number of units in the hidden layer.
 
@@ -315,7 +315,7 @@ class MultilayerPerceptron:
 # -------------------------------------------------------------------------------
 
 
-# Initiate a multilayer perceptron object: 784 input units (n_features), 100 hidden units (n_hidden), 10 output units (n_output)
+# Initiate a multilayer perceptron object: n_features=784, n_hidden=100, n_output=10
 
 mlp = MultilayerPerceptron(eta=0.0005, n_epochs=200, shuffle=True, l2=0.01, n_samples_mb=100, n_hidden=100)
 

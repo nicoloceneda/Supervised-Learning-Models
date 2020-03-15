@@ -129,7 +129,7 @@ plt.title('Scatter plot of the features')
 plt.xlabel('Sepal length [cm]')
 plt.ylabel('Petal length [cm]')
 plt.legend(loc='upper left')
-plt.savefig('images/02_perceptron/Scatter_plot_of_the_features.png')
+plt.savefig('images/01_perceptron/Scatter_plot_of_the_features.png')
 
 
 # -------------------------------------------------------------------------------
@@ -154,7 +154,7 @@ plt.plot(range(1, len(ppn.n_misclass) + 1), ppn.n_misclass, marker='o')
 plt.title('Number of misclassifications per epoch')
 plt.xlabel('Epoch')
 plt.ylabel('Number of misclassifications')
-plt.savefig('images/02_perceptron/Number_of_misclassifications_per_epoch.png')
+plt.savefig('images/01_perceptron/Number_of_misclassifications_per_epoch.png')
 
 
 # -------------------------------------------------------------------------------
