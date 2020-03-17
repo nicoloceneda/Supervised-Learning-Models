@@ -11,6 +11,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
 
 
 # -------------------------------------------------------------------------------
@@ -97,7 +98,7 @@ class MultilayerPerceptron:
             onehot : array, shape = [n_samples in train, n_labels]
         """
 
-        onehot = np.zeros(y_train.shape[0], n_labels)
+        onehot = np.zeros((y_train.shape[0], n_labels))
 
         for sample, label in enumerate(y_train.astype(int)):
 
@@ -234,16 +235,14 @@ class MultilayerPerceptron:
         self.b_out = np.zeros(n_labels)
         self.W_out = rgen.normal(loc=0.0, scale=0.1, size=(self.n_hidden, n_labels))
 
-        # TODO: understand
+        # Iterate over each epoch
 
-        n_epochs_strlen = len(str(self.n_epochs))
-        self.eval = {'cost': [], 'train_acc': [], 'valid_acc': []}
-
-        # Iterate over each epoch and minibatch
-
+        self.evaluation = {'cost': [], 'train_acc': [], 'valid_acc': []}
         y_train_enc = self.one_hot_encode(y_train, n_labels)
 
         for epoch in range(self.n_epochs):
+
+            # Iterate over each minibatch
 
             indices = np.arange(n_samples_train)
 
@@ -259,56 +258,46 @@ class MultilayerPerceptron:
 
                 z_h, A_h, z_out, A_out = self.forward_propagate(X_train_std[index_mb])
 
-                # Back propagate TODO: understand
+                # Back propagate
 
                 delta_out = A_out - y_train_enc[index_mb]
-                sigmoid_derivative_h = A_h * (1 - A_h)
-                delta_h = np.dot(delta_out, self.W_out.T) * sigmoid_derivative_h
+                delta_h = np.dot(delta_out, self.W_out.T) * (A_h * (1 - A_h))
 
-                grad_W_h = np.dot(X_train[index_mb].T, delta_h)
-                grad_b_h = np.sum(delta_h, axis=0)
-
-                grad_W_out = np.dot(A_h.t, delta_out)
+                grad_W_out = np.dot(A_h.T, delta_out)
                 grad_b_out = np.sum(delta_out, axis=0)
+
+                grad_W_h = np.dot(X_train_std[index_mb].T, delta_h)
+                grad_b_h = np.sum(delta_h, axis=0)
 
                 # Regularization and weight updates
 
-                delta_W_h = grad_W_h + self.l2 * self.W_h
-                delta_b_h = grad_b_h
-                self.W_h -= self.eta * delta_W_h
-                self.b_h -= self.eta * delta_b_h
+                self.W_out -= self.eta * (grad_W_out + self.l2 * self.W_out)
+                self.b_out -= self.eta * grad_b_out
 
-                delta_W_out = grad_W_out + self.l2 * self.W_out
-                delta_b_out = grad_b_out
-                self.W_out -= self.eta * delta_W_out
-                self.b_out -= self.eta * delta_b_out
+                self.W_h -= self.eta * (grad_W_h + self.l2 * self.W_h)
+                self.b_h -= self.eta * grad_b_h
 
             # Evaluation
 
-            z_h, a_h, z_out, a_out = self._forward(X_train)
+            z_h, A_h, z_out, A_out = self.forward_propagate(X_train_std)
 
-            cost = self.cost_function(y_enc=y_train_enc,
-                                          output=a_out)
+            cost = self.cost_function(y_train_enc, A_out)
 
-            y_train_pred = self.predict(X_train)
-            y_valid_pred = self.predict(X_valid)
+            y_train_pred = self.predict(X_train_std)
+            y_valid_pred = self.predict(X_valid_std)
 
-            train_acc = ((np.sum(y_train == y_train_pred)).astype(np.float) /
-                             X_train.shape[0])
-            valid_acc = ((np.sum(y_valid == y_valid_pred)).astype(np.float) /
-                             X_valid.shape[0])
+            train_acc = (np.sum(y_train == y_train_pred)).astype(np.float) / X_train_std.shape[0]
+            valid_acc = (np.sum(y_valid == y_valid_pred)).astype(np.float) / X_valid_std.shape[0]
 
-            sys.stderr.write('\r%0*d/%d | Cost: %.2f '
-                                 '| Train/Valid Acc.: %.2f%%/%.2f%% ' %
-                                 (epoch_strlen, i + 1, self.epochs, cost,
-                                  train_acc * 100, valid_acc * 100))
+            sys.stderr.write('\r%0*d/%d | Cost: %.2f | Train/Valid Acc.: %.2f%%/%.2f%% ' % (len(str(self.n_epochs)), epoch+1, self.n_epochs, cost, train_acc*100, valid_acc*100))
             sys.stderr.flush()
 
-            self.eval_['cost'].append(cost)
-            self.eval_['train_acc'].append(train_acc)
-            self.eval_['valid_acc'].append(valid_acc)
+            self.evaluation['cost'].append(cost)
+            self.evaluation['train_acc'].append(train_acc)
+            self.evaluation['valid_acc'].append(valid_acc)
 
         return self
+
 
 # -------------------------------------------------------------------------------
 # 3. TRAIN THE MULTILAYER PERCEPTRON
@@ -326,14 +315,14 @@ mlp.fit(X_train_std[:55000], y_train[:55000], X_train_std[55000:], y_train[55000
 
 
 # -------------------------------------------------------------------------------
-# 3. MODEL EVALUATION
+# 4. MODEL EVALUATION
 # -------------------------------------------------------------------------------
 
 
 # Plot the cost function per epoch
 
 plt.figure()
-plt.plot(range(1, len(mlp.evaluation['cost'] + 1), mlp.evaluation['cost'], marker='o'))
+plt.plot(range(1, len(mlp.evaluation['cost']) + 1), mlp.evaluation['cost'])
 plt.title('Cost function per epoch')
 plt.xlabel('Epoch')
 plt.ylabel('Cost')
@@ -343,11 +332,11 @@ plt.savefig('images/08_multilayer_perceptron_gd/Number_of_misclassifications_per
 # Plot the training and validation accuracy per epoch
 
 plt.figure()
-plt.plot(range(1, len(mlp.evaluation['train_acc'] + 1), mlp.evaluation['train_acc'], marker='o', label='train'))
-plt.plot(range(1, len(mlp.evaluation['valid_acc'] + 1), mlp.evaluation['train_acc'], marker='o', label='valid'))
+plt.plot(range(1, len(mlp.evaluation['train_acc']) + 1), mlp.evaluation['train_acc'], label='train')
+plt.plot(range(1, len(mlp.evaluation['valid_acc']) + 1), mlp.evaluation['valid_acc'], label='valid')
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
-plt.legend(loc='bottom right')
+plt.legend(loc='lower right')
 plt.savefig('images/08_multilayer_perceptron_gd/Train_and_valid_accuracy_per_epoch')
 
 
@@ -364,7 +353,7 @@ misclassified_images = X_test_std[y_test != y_test_predict][:25]
 misclassified_label = y_test_predict[y_test != y_test_predict][:25]
 correct_label = y_test[y_test != y_test_predict][:25]
 
-fig, ax = plt.subplots(n_rows=5, ncols=5, sharex=True, sharey=True)
+fig, ax = plt.subplots(nrows=5, ncols=5, sharex=True, sharey=True)
 ax = ax.flatten()
 
 for i in range(25):
@@ -376,11 +365,11 @@ for i in range(25):
 ax[0].set_xticks([])
 ax[0].set_yticks([])
 plt.tight_layout()
-plt.savefig('images/07_mnist 08_multilayer_perceptron_gd/Examples_of_misclassified_images.png')
+plt.savefig('images/08_multilayer_perceptron_gd/Examples_of_misclassified_images.png')
 
 
 # -------------------------------------------------------------------------------
-# 3. GENERAL
+# 5. GENERAL
 # -------------------------------------------------------------------------------
 
 
