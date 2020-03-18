@@ -50,15 +50,11 @@
 ├── 08_multilayer_perceptron.py            <-- Implementation of a multilayer perceptron for multi-
 │                                              class classification, with one hidden layer.
 │
-├── xx_multilayer_perceptron_tf_k.py       <-- Implementation of a multilayer perceptron via 
-│                                              Tensorflow's Layers.
+├── 09_ols_tf.py                           <-- Implementation of an OLS via Tensorflow.
+│                                              
 │
 ├── xx_multilayer_perceptron_tf_l.py       <-- Implementation of a multilayer perceptron via 
 │                                              Tensorflow's keras.
-│
-├── xx_ols_tf.py                           <-- Implementation of an OLS via Tensorflow.
-│
-├── xx_ols_tf.py                           <-- Implementation of an OLS via Tensorflow.
 │
 ├── xx_aclImdb.py                          <-- Extract and convert to csv the aclImdb database.
 │
