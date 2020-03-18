@@ -5,7 +5,7 @@
 *Website*: [www.nicoloceneda.com](http://www.nicoloceneda.com) \
 *Institution*: University of St Gallen \
 *Course*: Master of Banking and Finance \
-*Last update*: 15 March 2020
+*Last update*: 19 March 2020
 
 ## Content of the Scripts:
 <pre>
@@ -50,15 +50,6 @@
 ├── 08_multilayer_perceptron.py            <-- Implementation of a multilayer perceptron for multi-
 │                                              class classification, with one hidden layer.
 │
-├── 09_ols_tf.py                           <-- Implementation of an OLS via Tensorflow.
-│                                              
-│
-├── xx_multilayer_perceptron_tf_l.py       <-- Implementation of a multilayer perceptron via 
-│                                              Tensorflow's keras.
-│
-├── xx_aclImdb.py                          <-- Extract and convert to csv the aclImdb database.
-│
-└── xx_rnn_tf.py                           <-- Implementation of a recurrent neural network via
-                                               Tensorflow.
+└── 09_ols_tf.py                           <-- Implementation of an OLS via Tensorflow.
 </pre>
 
