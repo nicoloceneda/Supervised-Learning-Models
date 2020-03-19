@@ -1,4 +1,4 @@
-# Machine Learning Models
+# Supervised Learning Models
 
 *Author*: Nicolo Ceneda \
 *Contact*: nicolo.ceneda@student.unisg.ch \
