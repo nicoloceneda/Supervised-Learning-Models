@@ -16,7 +16,41 @@ import matplotlib.colors as clr
 
 
 # -------------------------------------------------------------------------------
-# 1. DESIGN THE PERCEPTRON CLASSIFIER
+# 1. PREPARE THE DATA
+# -------------------------------------------------------------------------------
+
+
+# Import the dataset
+
+data = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data', header=None)
+print(data.head())
+
+
+# Extract the class labels
+
+y = data.iloc[:100, 4].to_numpy()
+y = np.where(y == 'Iris-setosa', -1, 1)
+
+
+# Extract the features
+
+X = data.iloc[:100, [0, 2]].to_numpy()
+
+
+# Plot the features in a scatter plot
+
+plt.figure()
+plt.scatter(X[:50, 0], X[:50, 1], color='red', marker='+', label='Setosa')
+plt.scatter(X[50:, 0], X[50:, 1], color='blue', marker='+', label='Versicolor')
+plt.title('Scatter plot of the features')
+plt.xlabel('Sepal length [cm]')
+plt.ylabel('Petal length [cm]')
+plt.legend(loc='upper left')
+plt.savefig('images/01_perceptron/Scatter_plot_of_the_features.png')
+
+
+# -------------------------------------------------------------------------------
+# 2. DESIGN THE PERCEPTRON CLASSIFIER
 # -------------------------------------------------------------------------------
 
 
@@ -96,40 +130,6 @@ class Perceptron:
         net_input = self.w[0] + np.dot(X, self.w[1:])
 
         return np.where(net_input >= 0, 1, -1)
-
-
-# -------------------------------------------------------------------------------
-# 2. PREPARE THE DATA
-# -------------------------------------------------------------------------------
-
-
-# Import the dataset
-
-data = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data', header=None)
-print(data.head())
-
-
-# Extract the class labels
-
-y = data.iloc[:100, 4].to_numpy()
-y = np.where(y == 'Iris-setosa', -1, 1)
-
-
-# Extract the features
-
-X = data.iloc[:100, [0, 2]].to_numpy()
-
-
-# Plot the features in a scatter plot
-
-plt.figure()
-plt.scatter(X[:50, 0], X[:50, 1], color='red', marker='+', label='Setosa')
-plt.scatter(X[50:, 0], X[50:, 1], color='blue', marker='+', label='Versicolor')
-plt.title('Scatter plot of the features')
-plt.xlabel('Sepal length [cm]')
-plt.ylabel('Petal length [cm]')
-plt.legend(loc='upper left')
-plt.savefig('images/01_perceptron/Scatter_plot_of_the_features.png')
 
 
 # -------------------------------------------------------------------------------
