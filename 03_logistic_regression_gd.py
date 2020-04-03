@@ -56,9 +56,11 @@ plt.savefig('images/02_adaline_gd/Scatter_plot_of_the_scaled_features.png')
 
 
 # -------------------------------------------------------------------------------
-# 2. DESIGN THE ADALINE CLASSIFIER
+# 2. DESIGN THE MODEL
 # -------------------------------------------------------------------------------
 
+
+# Design the logistic regression
 
 class LogisticRegressionGD:
 
@@ -151,7 +153,7 @@ class LogisticRegressionGD:
 
 
 # -------------------------------------------------------------------------------
-# 3. TRAIN THE LOGISTIC REGRESSION
+# 3. TRAIN THE MODEL
 # -------------------------------------------------------------------------------
 
 
@@ -176,7 +178,7 @@ plt.savefig('images/03_logistic_regression_gd/LogisticRegressionGD_with_standard
 
 
 # -------------------------------------------------------------------------------
-# 4. PLOT THE DECISION BOUNDARY AND VERIFY THAT THE TRAINING SAMPLE IS CLASSIFIED CORRECTLY
+# 4. EVALUATE THE MODEL
 # -------------------------------------------------------------------------------
 
 # Function to plot the decision boundary
