@@ -50,7 +50,7 @@ X_test_std = std_scaler.transform(X_test)
 
 
 # -------------------------------------------------------------------------------
-# 2. TRAIN THE SUPPORT VECTOR MACHINE
+# 2. TRAIN THE MODEL
 # -------------------------------------------------------------------------------
 
 
@@ -81,7 +81,7 @@ print('Prediction accuracy: {}'.format(metrics.accuracy_score(y_test, y_predict)
 
 
 # -------------------------------------------------------------------------------
-# 4. PLOT THE DECISION BOUNDARY AND VERIFY THAT THE TRAINING AND TEST SAMPLES ARE CLASSIFIED CORRECTLY
+# 4. EVALUATE THE MODEL
 # -------------------------------------------------------------------------------
 
 
