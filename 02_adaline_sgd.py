@@ -60,6 +60,8 @@ plt.savefig('images/02_adaline_sgd/Scatter_plot_of_the_scaled_features.png')
 # -------------------------------------------------------------------------------
 
 
+# Design the adaline
+
 class AdalineSGD:
 
     """ Adaline classifier
