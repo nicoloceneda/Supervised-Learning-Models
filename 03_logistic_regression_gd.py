@@ -17,7 +17,46 @@ import matplotlib.colors as clr
 
 
 # -------------------------------------------------------------------------------
-# 1. DESIGN THE ADALINE CLASSIFIER
+# 1. PREPARE THE DATA
+# -------------------------------------------------------------------------------
+
+
+# Import the dataset
+
+data = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data', header=None)
+print(data.head())
+
+
+# Extract the class labels
+
+y = data.iloc[:100, 4].to_numpy()
+y = np.where(y == 'Iris-setosa', 0, 1)
+
+
+# Extract the features
+
+X = data.iloc[:100, [0, 2]].to_numpy()
+
+
+# Apply the standardization to scale the features
+
+X_std = (X - np.mean(X, axis=0)) / np.std(X, axis=0)
+
+
+# Plot the features in a scatter plot
+
+plt.figure()
+plt.scatter(X_std[:50, 0], X_std[:50, 1], color="red", marker="+", label="Setosa")
+plt.scatter(X_std[50:, 0], X_std[50:, 1], color="blue", marker="+", label="Versicolor")
+plt.title("Scatter plot of the scaled features")
+plt.xlabel("Sepal length [standardized]")
+plt.ylabel("Petal length [standardized]")
+plt.legend(loc="upper left")
+plt.savefig('images/02_adaline_gd/Scatter_plot_of_the_scaled_features.png')
+
+
+# -------------------------------------------------------------------------------
+# 2. DESIGN THE ADALINE CLASSIFIER
 # -------------------------------------------------------------------------------
 
 
@@ -109,45 +148,6 @@ class LogisticRegressionGD:
         net_input = self.w[0] + np.dot(X, self.w[1:])
 
         return np.where(net_input >= 0, 1, 0)
-
-
-# -------------------------------------------------------------------------------
-# 2. PREPARE THE DATA
-# -------------------------------------------------------------------------------
-
-
-# Import the dataset
-
-data = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data', header=None)
-print(data.head())
-
-
-# Extract the class labels
-
-y = data.iloc[:100, 4].to_numpy()
-y = np.where(y == 'Iris-setosa', 0, 1)
-
-
-# Extract the features
-
-X = data.iloc[:100, [0, 2]].to_numpy()
-
-
-# Apply the standardization to scale the features
-
-X_std = (X - np.mean(X, axis=0)) / np.std(X, axis=0)
-
-
-# Plot the features in a scatter plot
-
-plt.figure()
-plt.scatter(X_std[:50, 0], X_std[:50, 1], color="red", marker="+", label="Setosa")
-plt.scatter(X_std[50:, 0], X_std[50:, 1], color="blue", marker="+", label="Versicolor")
-plt.title("Scatter plot of the scaled features")
-plt.xlabel("Sepal length [standardized]")
-plt.ylabel("Petal length [standardized]")
-plt.legend(loc="upper left")
-plt.savefig('images/02_adaline_gd/Scatter_plot_of_the_scaled_features.png')
 
 
 # -------------------------------------------------------------------------------
