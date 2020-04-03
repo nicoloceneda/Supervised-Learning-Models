@@ -152,7 +152,7 @@ class AdalineGD:
 
 
 # -------------------------------------------------------------------------------
-# 3. TRAIN THE ADALINE
+# 3. TRAIN THE MODEL
 # -------------------------------------------------------------------------------
 
 
@@ -177,7 +177,7 @@ plt.savefig('images/02_adaline_gd/AdalineGD_with_standardization.png')
 
 
 # -------------------------------------------------------------------------------
-# 4. PLOT THE DECISION BOUNDARY AND VERIFY THAT THE TRAINING SAMPLE IS CLASSIFIED CORRECTLY
+# 4. EVALUATE THE MODEL
 # -------------------------------------------------------------------------------
 
 
