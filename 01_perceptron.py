@@ -50,9 +50,11 @@ plt.savefig('images/01_perceptron/Scatter_plot_of_the_features.png')
 
 
 # -------------------------------------------------------------------------------
-# 2. DESIGN THE PERCEPTRON CLASSIFIER
+# 2. DESIGN THE MODEL
 # -------------------------------------------------------------------------------
 
+
+# Design the perceptron
 
 class Perceptron:
 
@@ -133,7 +135,7 @@ class Perceptron:
 
 
 # -------------------------------------------------------------------------------
-# 3. TRAIN THE PERCEPTRON
+# 3. TRAIN THE MODEL
 # -------------------------------------------------------------------------------
 
 
@@ -158,7 +160,7 @@ plt.savefig('images/01_perceptron/Number_of_misclassifications_per_epoch.png')
 
 
 # -------------------------------------------------------------------------------
-# 4. PLOT THE DECISION BOUNDARY AND VERIFY THAT THE TRAINING SAMPLE IS CLASSIFIED CORRECTLY
+# 4. EVALUATE THE MODEL
 # -------------------------------------------------------------------------------
 
 
