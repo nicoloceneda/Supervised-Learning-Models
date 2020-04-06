@@ -1,5 +1,12 @@
 # Supervised Learning Models
 
+*Author*: Nicolo Ceneda \
+*Contact*: nicolo.ceneda@student.unisg.ch \
+*Website*: [www.nicoloceneda.com](http://www.nicoloceneda.com) \
+*Institution*: University of St Gallen \
+*Course*: Master of Banking and Finance \
+*Last update*: 04 April 2020
+
 <!-- buttons -->
 <p align="left">
     <a href="https://www.python.org/">
@@ -9,13 +16,6 @@
         <img src="https://img.shields.io/badge/Maintained%3F-yes-brightgreen.svg"
             alt="issues"></a> &nbsp;
 </p>
-
-*Author*: Nicolo Ceneda \
-*Contact*: nicolo.ceneda@student.unisg.ch \
-*Website*: [www.nicoloceneda.com](http://www.nicoloceneda.com) \
-*Institution*: University of St Gallen \
-*Course*: Master of Banking and Finance \
-*Last update*: 04 April 2020
 
 ## Content of the Scripts:
 <pre>
