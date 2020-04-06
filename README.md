@@ -1,3 +1,5 @@
+# Supervised Learning Models
+
 <!-- buttons -->
 <p align="center">
     <a href="https://www.python.org/">
@@ -7,8 +9,6 @@
         <img src="https://img.shields.io/badge/Maintained%3F-yes-brightgreen.svg"
             alt="issues"></a> &nbsp;
 </p>
-
-# Supervised Learning Models
 
 *Author*: Nicolo Ceneda \
 *Contact*: nicolo.ceneda@student.unisg.ch \
