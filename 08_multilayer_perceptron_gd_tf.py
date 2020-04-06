@@ -51,9 +51,9 @@ ds_test = ds_test.map(lambda item: (item['features'], item['label']))
 
 # Design the multilayer perceptron
 
-layers_1 = tf.keras.layers.Dense(units=16, activation='sigmoid', name='fc1', input_shape=(4, ))
-layers_2 = tf.keras.layers.Dense(units=3, activation='softmax', name='fc2')
-iris_model = tf.keras.Sequential([layers_1, layers_2])
+iris_model = tf.keras.Sequential()
+iris_model.add(tf.keras.layers.Dense(units=16, activation='sigmoid', name='fc1', input_shape=(4, )))
+iris_model.add(tf.keras.layers.Dense(units=3, activation='softmax', name='fc2'))
 
 
 # Print the model summary
