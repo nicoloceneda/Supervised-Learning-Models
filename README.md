@@ -6,12 +6,6 @@
     <a href="https://github.com/robertmartin8/PyPortfolioOpt/graphs/commit-activity">
         <img src="https://img.shields.io/badge/Maintained%3F-yes-brightgreen.svg"
             alt="issues"></a> &nbsp;
-    <a href="https://pyportfolioopt.readthedocs.io/en/latest/">
-        <img src="https://img.shields.io/badge/docs-passing-brightgreen.svg"
-            alt="docs"></a> &nbsp;
-    <a href="https://travis-ci.org/robertmartin8/PyPortfolioOpt">
-        <img src="https://travis-ci.org/robertmartin8/PyPortfolioOpt.svg?branch=master"
-            alt="travis"></a> &nbsp;
 </p>
 
 # Supervised Learning Models
