@@ -60,6 +60,8 @@
 ├── 08_multilayer_perceptron.py            <-- Implementation of a multilayer perceptron for multi-
 │                                              class classification, with one hidden layer.
 │
-└── 08_multilayer_perceptron_gd_tf.py      <-- Implementation of an OLS via Tensorflow.
+└── 08_multilayer_perceptron_gd_tf.py      <-- Implementation of a multilayer perceptron for multi-
+                                               class classification, with two hidden layers, using 
+                                               tensorflow.
 </pre>
 
