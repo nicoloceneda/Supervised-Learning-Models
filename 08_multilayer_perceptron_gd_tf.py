@@ -1,6 +1,6 @@
 """ MULTILAYER PERCEPTRON - GRADIENT DESCENT - TENSOR FLOW
     ------------------------------------------------------
-    Implementation of a multilayer perceptron for multi-class classification, with two hidden layer, using tensorflow.
+    Implementation of a multilayer perceptron for multi-class classification, with two hidden layers, using tensorflow.
 """
 
 
@@ -54,6 +54,10 @@ ds_test = ds_test.map(lambda item: (item['features'], item['label']))
 iris_model = tf.keras.Sequential()
 iris_model.add(tf.keras.layers.Dense(units=16, activation='sigmoid', name='fc1', input_shape=(4, )))
 iris_model.add(tf.keras.layers.Dense(units=3, activation='softmax', name='fc2'))
+
+""" Alternatively we can use late variable creation: 
+    iris_model.build(input_shape=(None, 4))
+"""
 
 
 # Print the model summary
