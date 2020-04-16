@@ -92,7 +92,7 @@ ds_test = ds_test.padded_batch(batch_size, padded_shapes=([-1], []))
 # -------------------------------------------------------------------------------
 
 
-# Design the multilayer recurrent neural network
+# Design the lstm multilayer recurrent neural network
 
 vocabulary_size = len(token_and_counts) + 2
 embedding_size = 20
@@ -120,7 +120,7 @@ bid_lstm_model.compile(optimizer=tf.keras.optimizers.Adam(1e-3), loss=tf.keras.l
 # -------------------------------------------------------------------------------
 
 
-# Train the multilayer recurrent neural network
+# Train the lstm multilayer recurrent neural network
 
 history = bid_lstm_model.fit(ds_train, validation_data=ds_valid, epochs=10)
 
@@ -145,7 +145,7 @@ plt.savefig('images/10_recurrent_neural_network_lstm_tf/Training_loss_and_accura
 # -------------------------------------------------------------------------------
 
 
-# Evaluate the multilayer recurrent neural network
+# Evaluate the lstm multilayer recurrent neural network
 
 results = bid_lstm_model.evaluate(ds_test)
 print('Test accuracy: {:.4f}'.format(results[1]*100))
