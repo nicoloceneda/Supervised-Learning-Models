@@ -104,6 +104,7 @@ ax[1].plot(hist['accuracy'])
 ax[1].set_xlabel('Epoch')
 ax[1].set_title('Training accuracy')
 ax[1].tick_params(axis='both', which='major')
+plt.savefig('images/08_multilayer_perceptron_gd_tf/Training_loss_and_accuracy_per_epoch.png')
 
 
 # -------------------------------------------------------------------------------

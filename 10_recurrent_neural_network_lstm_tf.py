@@ -137,6 +137,7 @@ ax[1].plot(hist['accuracy'])
 ax[1].set_xlabel('Epoch')
 ax[1].set_title('Training accuracy')
 ax[1].tick_params(axis='both', which='major')
+plt.savefig('images/10_recurrent_neural_network_lstm_tf/Training_loss_and_accuracy_per_epoch.png')
 
 
 # -------------------------------------------------------------------------------
