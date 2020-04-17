@@ -145,7 +145,35 @@ plt.savefig('images/10_recurrent_neural_network_lstm_tf/Training_loss_and_accura
 
 # Evaluate the multilayer recurrent neural network
 
-def sample(model, starting_str, len_generated:)
+def sample(model, starting_string, len_generated_text=500, max_input_length=40, scale_factor=1.0):
+
+    encoded_input = [character_to_integer[s] for s in starting_string]
+    encoded_input = tf.reshape(encoded_input, (1, -1))
+    generated_string = starting_string
+
+    model.reset_states()
+
+    for i in range(len_generated_text):
+
+        logits = model(encoded_input)
+        logits = tf.squeeze(logits, 0)
+        scaled_logits = logits * scale_factor
+        new_char_index = tf.random.categorical(scaled_logits, num_samples=1)
+        new_char_index = tf.squeeze(new_char_index)[-1].numpy()
+        generated_string += str(character_array[new_char_index])
+        new_char_index = tf.expand_dims([new_char_index], 0)
+        encoded_input = tf.concat([encoded_input, new_char_index], axis=1)
+        encoded_input = encoded_input[:, -max_input_length:]
+
+    return generated_string
+
+
+# Generate new text
+
+tf.random.set_seed(1)
+print(sample(lstm_model, starting_string='The island'))
+
+
 # -------------------------------------------------------------------------------
 # 5. GENERAL
 # -------------------------------------------------------------------------------
