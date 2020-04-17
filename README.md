@@ -5,7 +5,7 @@
 *Website*: [www.nicoloceneda.com](http://www.nicoloceneda.com) \
 *Institution*: University of St Gallen \
 *Course*: Master of Banking and Finance \
-*Last update*: 16 April 2020
+*Last update*: 17 April 2020
 
 <!-- buttons -->
 <p align="left">
@@ -57,11 +57,26 @@
 ├── 07_mnist_dataset.py                    <-- Download mnist dataset and save the standardized fea-
 │                                              tures and class labels.
 │
-├── 08_multilayer_perceptron.py            <-- Implementation of a multilayer perceptron for multi-
+├── 08_multilayer_perceptron_gd.py         <-- Implementation of a multilayer perceptron for multi-
 │                                              class classification, with one hidden layer.
 │
-└── 08_multilayer_perceptron_gd_tf.py      <-- Implementation of a multilayer perceptron for multi-
-                                               class classification, with two hidden layers, using 
-                                               tensorflow.
+├── 08_multilayer_perceptron_gd_tf.py      <-- Implementation of a multilayer perceptron for multi-
+│                                              class classification, with two hidden layers, using 
+│                                              tensorflow.
+│
+├── 09_imdb_dataset.py                     <-- Download the imdb dataset and save the features and 
+│                                              targets.
+│ 
+├── 10_recurrent_neural_network_lstm_tf.py <-- Implementation of a lstm multilayer recurrent neural 
+│                                              network for sentiment analysis, with a many-to-one 
+│                                              architecture and two hidden layers, using tensorflow.
+│                                              
+├── 10_recurrent_neural_network_simp_tf.py <-- Implementation of a simple single layer recurrent ne-
+│                                              ural network for sentiment analysis, with a many-to-
+│                                              one architecture and two hidden layers, using tensor-
+│                                              flow.
+│
+└── images                                 <-- Images produced by the programs.
+
 </pre>
 
