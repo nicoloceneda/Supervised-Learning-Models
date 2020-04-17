@@ -1,7 +1,7 @@
 """ RECURRENT NEURAL NETWORK - LSTM - TENSOR FLOW
     ---------------------------------------------
-    Implementation of a lstm multilayer recurrent neural network for sentiment analysis, with a many-to-one architecture and two hidden
-    layers, using tensorflow.
+    Implementation of a lstm multilayer recurrent neural network for text generation, with a many-to-one architecture and two hidden layers,
+    using tensorflow.
 """
 
 
@@ -10,11 +10,9 @@
 # -------------------------------------------------------------------------------
 
 
-import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
-import tensorflow_datasets as tfds
-from collections import Counter
 
 
 # -------------------------------------------------------------------------------
@@ -24,67 +22,63 @@ from collections import Counter
 
 # Import the dataset
 
-imdb = pd.read_csv('imdb dataset/extracted/imdb_data.csv', encoding='utf-8')
+with open('gutenberg/gutenberg.txt', 'r') as fp:
 
+    text = fp.read()
 
-# Create a tensorflow dataset with tuples of features and class labels
-
-target = imdb.pop('sentiment')
-ds = tf.data.Dataset.from_tensor_slices((imdb.values, target.values))
-
-
-# Separate the data it into train, test and validation subsets
-
-tf.random.set_seed(1)
-ds_orig = ds.shuffle(50000, reshuffle_each_iteration=False)
-ds_raw_test = ds_orig.take(25000)
-ds_raw_train = ds_orig.skip(25000).take(20000)
-ds_raw_valid = ds_orig.skip(25000).skip(20000)
-
-
-# Identify the unique words (tokens) in the training dataset
-
-text_into_words = tfds.features.text.Tokenizer()
-token_and_counts = Counter()
-
-for sample in ds_raw_train:
-
-    tokens = text_into_words.tokenize(sample[0].numpy()[0])
-    token_and_counts.update(tokens)
+start_index = text.find('THE MYSTERIOUS ISLAND')
+end_index = text.find('End of the Project Gutenberg')
+text = text[start_index:end_index]
 
 
 # Map each unique word to a unique integer
 
-encoder = tfds.features.text.TokenTextEncoder(token_and_counts)
+character_set = sorted(set(text))
+character_to_integer = {ch: i for i, ch in enumerate(character_set)}
 
 
-# Converted the sequences of words into sequences of integers
+# Convert the text into numbers
 
-def encode(text_tensor, label):
-
-    text = text_tensor.numpy()[0]
-    encoded_text = encoder.encode(text)
-
-    return encoded_text, label
+text_encoded = np.array([character_to_integer[ch] for ch in text], dtype=np.int32)
+print('Example of encoded text: ', text[15:21], '-->', text_encoded[15:21])
 
 
-def encode_map_fn(text, label):
+# Map each unique integer to a unique word
 
-    return tf.py_function(encode, inp=[text, label], Tout=(tf.int64, tf.int64))
-
-
-ds_train = ds_raw_train.map(encode_map_fn)
-ds_valid = ds_raw_valid.map(encode_map_fn)
-ds_test = ds_raw_test.map(encode_map_fn)
+character_array = np.array(character_set)
+print('Example of decoded text: ', text_encoded[15:21], '-->', ''.join(character_array[text_encoded[15:21]]))
 
 
-# Divide the dataset into mini-batches, padding the shorter sequencies
+# Create a tensorflow dataset
 
-batch_size = 32
+ds_text_encoded = tf.data.Dataset.from_tensor_slices(text_encoded)
 
-ds_train = ds_train.padded_batch(batch_size, padded_shapes=([-1], []))
-ds_valid = ds_valid.padded_batch(batch_size, padded_shapes=([-1], []))
-ds_test = ds_test.padded_batch(batch_size, padded_shapes=([-1], []))
+
+# Divide the dataset into chunks
+
+seq_length = 40
+chunk_size = seq_length + 1
+ds_chunks = ds_text_encoded.batch(chunk_size, drop_remainder=True)
+
+
+# Create a function to split input and target sequences
+
+def split_input_target(chunk):
+
+    input_seq = chunk[:-1]
+    target_seq = chunk[1:]
+
+    return input_seq, target_seq
+
+
+ds_sequences = ds_chunks.map(split_input_target)
+
+
+# Divide the dataset into mini-batches
+
+batch_size = 64
+buffer_size = 10000
+ds = ds_sequences.shuffle(buffer_size).batch(batch_size)
 
 
 # -------------------------------------------------------------------------------
@@ -92,27 +86,32 @@ ds_test = ds_test.padded_batch(batch_size, padded_shapes=([-1], []))
 # -------------------------------------------------------------------------------
 
 
+# Create a function to design the lstm multilayer recurrent neural network
+
+def build_model(vocab_size, embedding_size, rnn_units):
+
+    model = tf.keras.Sequential()
+    model.add(tf.keras.layers.Embedding(vocab_size, embedding_size))
+    model.add(tf.keras.layers.LSTM(rnn_units, return_sequences=True))
+    model.add(tf.keras.layers.Dense(vocab_size))
+
+    return model
+
+
 # Design the lstm multilayer recurrent neural network
 
-vocabulary_size = len(token_and_counts) + 2
-embedding_size = 20
 tf.random.set_seed(1)
-
-bid_lstm_model = tf.keras.Sequential()
-bid_lstm_model.add(tf.keras.layers.Embedding(input_dim=vocabulary_size, output_dim=embedding_size, name='embed-layer'))
-bid_lstm_model.add(tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, name='lstm-layer'), name='bdir-lstm'))
-bid_lstm_model.add(tf.keras.layers.Dense(64, activation='relu'))
-bid_lstm_model.add(tf.keras.layers.Dense(1, activation='sigmoid'))
+lstm_model = build_model(vocab_size=len(character_set), embedding_size=256, rnn_units=512)
 
 
 # Print the model summary
 
-bid_lstm_model.summary()
+lstm_model.summary()
 
 
 # Compile the model to specify optimizer, loss function, evaluation metrics
 
-bid_lstm_model.compile(optimizer=tf.keras.optimizers.Adam(1e-3), loss=tf.keras.losses.BinaryCrossentropy(from_logits=False), metrics=['accuracy'])
+lstm_model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
 
 
 # -------------------------------------------------------------------------------
@@ -122,7 +121,7 @@ bid_lstm_model.compile(optimizer=tf.keras.optimizers.Adam(1e-3), loss=tf.keras.l
 
 # Train the lstm multilayer recurrent neural network
 
-history = bid_lstm_model.fit(ds_train, validation_data=ds_valid, epochs=10)
+history = lstm_model.fit(ds, epochs=20)
 
 
 # Visualize the learning curve
@@ -144,13 +143,9 @@ plt.savefig('images/10_recurrent_neural_network_lstm_tf/Training_loss_and_accura
 # 4. EVALUATE THE MODEL
 # -------------------------------------------------------------------------------
 
+# Evaluate the multilayer recurrent neural network
 
-# Evaluate the lstm multilayer recurrent neural network
-
-results = bid_lstm_model.evaluate(ds_test)
-print('Test accuracy: {:.4f}'.format(results[1]*100))
-
-
+def sample(model, starting_str, len_generated:)
 # -------------------------------------------------------------------------------
 # 5. GENERAL
 # -------------------------------------------------------------------------------
