@@ -1,3 +1,8 @@
+""" IMDB DATASET
+    -------------
+    Download the imdb dataset and save the features and targets.
+"""
+
 
 # -------------------------------------------------------------------------------
 # 0. IMPORT LIBRARIES
