@@ -67,7 +67,7 @@
 ├── 09_imdb_dataset.py                     <-- Download the imdb dataset and save the features and 
 │                                              targets.
 │ 
-├── 10_recurrent_neural_network_lstm_tf.py <-- Implementation of a lstm multilayer recurrent neural 
+├── 10_recurrent_neural_network_bi_lstm_tf.py <-- Implementation of a lstm multilayer recurrent neural 
 │                                              network for sentiment analysis, with a many-to-one 
 │                                              architecture and two hidden layers, using tensorflow.
 │                                              
@@ -75,6 +75,10 @@
 │                                              ural network for sentiment analysis, with a many-to-
 │                                              one architecture and two hidden layers, using tensor-
 │                                              flow.
+│
+├── 10_recurrent_neural_network_lstm_tf.py <-- Implementation of a lstm multilayer recurrent neural 
+│                                              network for text generation, with a many-to-one arch-
+│                                              itecture and two hidden layers, using tensorflow.
 │
 └── images                                 <-- Images produced by the programs.
 
