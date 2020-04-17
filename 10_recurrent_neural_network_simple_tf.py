@@ -1,6 +1,6 @@
 """ RECURRENT NEURAL NETWORK - SIMPLE - TENSOR FLOW
     -----------------------------------------------
-    Implementation of a multilayer simple recurrent neural network for sentiment analysis, with a many-to-one architecture and two hidden
+    Implementation of a simple single layer recurrent neural network for sentiment analysis, with a many-to-one architecture and two hidden
     layers, using tensorflow.
 """
 
@@ -88,13 +88,11 @@ def preprocess_datasets(ds_raw_train, ds_raw_valid, ds_raw_test, max_seq_length=
 
     # Divide the dataset into mini-batches, padding the shorter sequencies
 
-    batch_size = 32
-
     ds_train = ds_train.padded_batch(batch_size, padded_shapes=([-1], []))
     ds_valid = ds_valid.padded_batch(batch_size, padded_shapes=([-1], []))
     ds_test = ds_test.padded_batch(batch_size, padded_shapes=([-1], []))
 
-    return (ds_train, ds_valid, ds_test, len(token_and_counts))
+    return ds_train, ds_valid, ds_test, len(token_and_counts)
 
 
 # -------------------------------------------------------------------------------
@@ -102,7 +100,7 @@ def preprocess_datasets(ds_raw_train, ds_raw_valid, ds_raw_test, max_seq_length=
 # -------------------------------------------------------------------------------
 
 
-# Create a function to design the multilayer recurrent neural network
+# Create a function to design the simple single layer recurrent neural network
 
 def build_rnn_model(vocabulary_size, embedding_size, recurrent_type='SimpleRNN', n_recurrent_units=64, n_recurrent_layers=1, bidirectional=True):
 
@@ -138,17 +136,24 @@ def build_rnn_model(vocabulary_size, embedding_size, recurrent_type='SimpleRNN',
     return model
 
 
+# Design the simple single layer recurrent neural network
 
+ds_train, ds_valid, ds_test, n = preprocess_datasets(ds_raw_train, ds_raw_valid, ds_raw_test, max_seq_length=100, batch_size=32)
+
+vocabulary_size = n + 2
+
+rnn_model = build_rnn_model(vocabulary_size=vocabulary_size, embedding_size=20, recurrent_type='SimpleRNN', n_recurrent_units=64,
+                            n_recurrent_layers=1, bidirectional=True)
 
 
 # Print the model summary
 
-model.summary()
+rnn_model.summary()
 
 
 # Compile the model to specify optimizer, loss function, evaluation metrics
 
-bid_lstm_model.compile(optimizer=tf.keras.optimizers.Adam(1e-3), loss=tf.keras.losses.BinaryCrossentropy(from_logits=False), metrics=['accuracy'])
+rnn_model.compile(optimizer=tf.keras.optimizers.Adam(1e-3), loss=tf.keras.losses.BinaryCrossentropy(from_logits=False), metrics=['accuracy'])
 
 
 # -------------------------------------------------------------------------------
@@ -156,9 +161,9 @@ bid_lstm_model.compile(optimizer=tf.keras.optimizers.Adam(1e-3), loss=tf.keras.l
 # -------------------------------------------------------------------------------
 
 
-# Train the multilayer recurrent neural network
+# Train the simple single layer recurrent neural network
 
-history = bid_lstm_model.fit(ds_train, validation_data=ds_valid, epochs=10)
+history = rnn_model.fit(ds_train, validation_data=ds_valid, epochs=10)
 
 
 # Visualize the learning curve
@@ -173,6 +178,7 @@ ax[1].plot(hist['accuracy'])
 ax[1].set_xlabel('Epoch')
 ax[1].set_title('Training accuracy')
 ax[1].tick_params(axis='both', which='major')
+plt.savefig('images/10_recurrent_neural_network_simple_tf/Training_loss_and_accuracy_per_epoch.png')
 
 
 # -------------------------------------------------------------------------------
@@ -182,6 +188,17 @@ ax[1].tick_params(axis='both', which='major')
 
 # Evaluate the multilayer recurrent neural network
 
-results = bid_lstm_model.evaluate(ds_test)
+results = rnn_model.evaluate(ds_test)
 print('Test accuracy: {:.4f}'.format(results[1]*100))
+
+
+# -------------------------------------------------------------------------------
+# 5. GENERAL
+# -------------------------------------------------------------------------------
+
+
+# Show plots
+
+plt.show()
+
 

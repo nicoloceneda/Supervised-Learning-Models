@@ -1,6 +1,6 @@
 """ RECURRENT NEURAL NETWORK - LSTM - TENSOR FLOW
     ---------------------------------------------
-    Implementation of a multilayer lstm recurrent neural network for sentiment analysis, with a many-to-one architecture and two hidden l
+    Implementation of a lstm multilayer recurrent neural network for sentiment analysis, with a many-to-one architecture and two hidden l
     ayers, using tensorflow.
 """
 
