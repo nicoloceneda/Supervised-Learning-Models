@@ -186,7 +186,7 @@ plt.savefig('images/10_recurrent_neural_network_simple_tf/Training_loss_and_accu
 # -------------------------------------------------------------------------------
 
 
-# Evaluate the multilayer recurrent neural network
+# Evaluate the simple single layer recurrent neural network
 
 results = rnn_model.evaluate(ds_test)
 print('Test accuracy: {:.4f}'.format(results[1]*100))
