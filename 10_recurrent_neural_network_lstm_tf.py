@@ -1,6 +1,6 @@
 """ RECURRENT NEURAL NETWORK - LSTM - TENSOR FLOW
     ---------------------------------------------
-    Implementation of a lstm multilayer recurrent neural network for text generation, with a many-to-one architecture and two hidden layers,
+    Implementation of a lstm multilayer recurrent neural network for text generation, with a many-to-many architecture and two hidden layers,
     using tensorflow.
 """
 
