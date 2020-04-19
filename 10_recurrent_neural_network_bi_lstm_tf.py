@@ -61,6 +61,7 @@ for sample in ds_raw_train:
 
 encoder = tfds.features.text.TokenTextEncoder(token_and_counts)
 
+
 def encode(text_tensor, label):
 
     text = text_tensor.numpy()[0]
@@ -100,7 +101,7 @@ embedding_size = 20
 tf.random.set_seed(1)
 
 bid_lstm_model = tf.keras.Sequential()
-bid_lstm_model.add(tf.keras.layers.Embedding(input_dim=vocabulary_size, output_dim=embedding_size, name='embed-layer'))
+bid_lstm_model.add(tf.keras.layers.Embedding(input_length=None, input_dim=vocabulary_size, output_dim=embedding_size, name='embed-layer'))
 bid_lstm_model.add(tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64, name='lstm-layer'), name='bdir-lstm'))
 bid_lstm_model.add(tf.keras.layers.Dense(64, activation='relu'))
 bid_lstm_model.add(tf.keras.layers.Dense(1, activation='sigmoid'))
