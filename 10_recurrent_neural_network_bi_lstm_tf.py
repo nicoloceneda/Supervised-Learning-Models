@@ -40,10 +40,10 @@ for example in ds.take(2):
 # Separate the data it into train, test and validation subsets
 
 tf.random.set_seed(1)
-ds_orig = ds.shuffle(50000, reshuffle_each_iteration=False)
-ds_raw_test = ds_orig.take(25000)
-ds_raw_train = ds_orig.skip(25000).take(20000)
-ds_raw_valid = ds_orig.skip(25000).skip(20000)
+ds_shuffled = ds.shuffle(imdb.shape[0], reshuffle_each_iteration=False)
+ds_raw_test = ds_shuffled.take(25000)
+ds_raw_train = ds_shuffled.skip(25000).take(20000)
+ds_raw_valid = ds_shuffled.skip(25000).skip(20000)
 
 
 # Identify the unique words (tokens) in the training dataset
