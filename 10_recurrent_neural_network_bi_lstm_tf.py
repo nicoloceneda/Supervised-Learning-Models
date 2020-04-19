@@ -32,6 +32,10 @@ imdb = pd.read_csv('imdb dataset/extracted/imdb_data.csv', encoding='utf-8')
 target = imdb.pop('sentiment')
 ds = tf.data.Dataset.from_tensor_slices((imdb.values, target.values))
 
+for example in ds.take(2):
+
+    print(example[0].numpy()[0][:60], '<---', example[1].numpy())
+
 
 # Separate the data it into train, test and validation subsets
 
