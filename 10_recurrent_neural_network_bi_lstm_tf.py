@@ -48,21 +48,18 @@ ds_raw_valid = ds_shuffled.skip(25000).skip(20000)
 
 # Identify the unique words (tokens) in the training dataset
 
-text_into_words = tfds.features.text.Tokenizer()
+tokenizer = tfds.features.text.Tokenizer()
 token_and_counts = Counter()
 
 for sample in ds_raw_train:
 
-    tokens = text_into_words.tokenize(sample[0].numpy()[0])
+    tokens = tokenizer.tokenize(sample[0].numpy()[0])
     token_and_counts.update(tokens)
 
 
-# Map each unique word to a unique integer
+# Converted the sequences of words into sequences of integers
 
 encoder = tfds.features.text.TokenTextEncoder(token_and_counts)
-
-
-# Converted the sequences of words into sequences of integers
 
 def encode(text_tensor, label):
 
