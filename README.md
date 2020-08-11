@@ -1,18 +1,18 @@
 # Supervised Learning Models
 
 *Author*: Nicolo Ceneda \
-*Contact*: nicolo.ceneda@student.unisg.ch \
+*Contact*: n.ceneda20@imperial.ac.uk \
 *Website*: [www.nicoloceneda.com](http://www.nicoloceneda.com) \
-*Institution*: University of St Gallen \
-*Course*: Master of Banking and Finance \
-*Last update*: 04 May 2020
+*Institution*: Imperial College London \
+*Course*: PhD in Finance \
+*Last update*: 11 August 2020
 
 <!-- buttons -->
 <p align="left">
     <a href="https://www.python.org/">
         <img src="https://img.shields.io/badge/python-v3-brightgreen.svg"
             alt="python"></a> &nbsp;
-    <a href="https://github.com/nicoloceneda/Supervised-Learning-Models/graphs/commit-activity">
+    <a href="https://github.com/nicoloceneda/Python-edu/graphs/commit-activity">
         <img src="https://img.shields.io/badge/Maintained%3F-yes-brightgreen.svg"
             alt="issues"></a> &nbsp;
 </p>
