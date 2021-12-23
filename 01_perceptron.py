@@ -63,7 +63,7 @@ class Perceptron:
         Parameters:
         ----------
         eta : float
-            Learning rate (between 0.0 and 1.0)
+            Learning rate (between 0.0 and 1.0).
         n_epochs : int
             Number of epochs.
 

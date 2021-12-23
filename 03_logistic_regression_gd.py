@@ -52,7 +52,7 @@ plt.title("Scatter plot of the scaled features")
 plt.xlabel("Sepal length [standardized]")
 plt.ylabel("Petal length [standardized]")
 plt.legend(loc="upper left")
-plt.savefig('images/02_adaline_gd/Scatter_plot_of_the_scaled_features.png')
+plt.savefig('images/03_logistic_regression_gd/Scatter_plot_of_the_scaled_features.png')
 
 
 # -------------------------------------------------------------------------------

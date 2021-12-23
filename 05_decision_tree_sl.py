@@ -55,12 +55,12 @@ X_test_std = std_scaler.transform(X_test)
 
 # Initialize a decision tree object
 
-tree = tree.DecisionTreeClassifier(criterion='gini', max_depth=4, random_state=1)
+model_tree = tree.DecisionTreeClassifier(criterion='gini', max_depth=4, random_state=1)
 
 
 # Learn from the data via the fit method
 
-tree.fit(X_train_std, y_train)
+model_tree.fit(X_train_std, y_train)
 
 
 # -------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ tree.fit(X_train_std, y_train)
 
 # Predict the classes of the samples in the test set
 
-y_predict = tree.predict(X_test_std)
+y_predict = model_tree.predict(X_test_std)
 
 
 # Evaluate the performance of the model
@@ -137,12 +137,19 @@ def plot_decision_regions(X, y, classifier, resolution=0.02, test_idx=None):
 X_combined_std = np.vstack((X_train_std, X_test_std))
 y_combined = np.hstack((y_train, y_test))
 
-plot_decision_regions(X=X_combined_std, y=y_combined, classifier=tree, test_idx=range(105, 150))
+plot_decision_regions(X=X_combined_std, y=y_combined, classifier=model_tree, test_idx=range(105, 150))
 plt.title('Decision boundary and training sample')
 plt.xlabel('Petal length [standardized]')
 plt.ylabel('Petal width [standardized]')
 plt.legend(loc='upper left')
 plt.savefig('images/05_decision_tree_sl/Decision_boundary_and_training_sample.png')
+
+
+# Plot the decision tree
+
+plt.figure()
+tree.plot_tree(model_tree)
+plt.savefig('images/05_decision_tree_sl/Decision_tree.png')
 
 
 # -------------------------------------------------------------------------------
