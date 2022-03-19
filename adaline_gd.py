@@ -171,14 +171,14 @@ ada = AdalineGD(eta=0.5, n_epochs=20)
 ada.fit(X_std, y)
 
 
-# Plot the loss function per iter
+# Plot the loss function per epoch
 
 plt.figure()
-plt.plot(range(1, len(ada.loss_fun) + 1), ada.loss_fun, marker='o')
-plt.title('AdalineGD with standardization')
+plt.plot(range(1, ada.n_epochs + 1), ada.loss_fun, marker='o')
+plt.title('Loss function per epoch')
 plt.xlabel("Epoch")
-plt.ylabel('Sum of squared errors')
-plt.savefig('images/02_adaline_gd/AdalineGD_with_standardization.png')
+plt.ylabel('Mean squared errors')
+plt.savefig('images/02_adaline_gd/Loss_function_per_epoch.png')
 
 
 # -------------------------------------------------------------------------------

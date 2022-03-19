@@ -157,11 +157,11 @@ ppn.fit(X, y)
 # Plot the number of misclassifications per epoch
 
 plt.figure()
-plt.plot(range(1, len(ppn.n_misclass) + 1), ppn.n_misclass, marker='o')
-plt.title('Number of misclassifications per epoch')
+plt.plot(range(1, ppn.n_epochs + 1), ppn.n_misclass, marker='o')
+plt.title('Misclassifications per epoch')
 plt.xlabel('Epoch')
 plt.ylabel('Number of misclassifications')
-plt.savefig('images/01_perceptron/Number_of_misclassifications_per_epoch.png')
+plt.savefig('images/01_perceptron/Misclassifications_per_epoch.png')
 
 
 # -------------------------------------------------------------------------------
