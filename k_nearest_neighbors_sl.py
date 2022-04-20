@@ -130,7 +130,7 @@ def plot_decision_regions(X, y, classifier, resolution=0.02, test_idx=None):
 
     if test_idx:
         X_test, y_test = X[test_idx, :], y[test_idx]
-        plt.scatter(X_test[:, 0], X_test[:, 1], alpha=0.8, linewidth=1, color='', marker='s', edgecolor='black', label='test_set')
+        plt.scatter(X_test[:, 0], X_test[:, 1], alpha=0.8, linewidth=1, color='none', marker='s', edgecolor='black', label='test_set')
 
 
 # Plot the decision region and the data
